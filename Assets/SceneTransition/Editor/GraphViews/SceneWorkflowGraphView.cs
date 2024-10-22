@@ -14,7 +14,7 @@ namespace SceneTransition.Editor.GraphViews
 			this.AddManipulator(new SelectionDragger());
 			this.AddManipulator(new RectangleSelector());
 			this.AddManipulator(new ContentZoomer());
-			this.AddManipulator(CreateLoadSceneManipulator());
+			this.AddManipulator(CreateNodeManipulator());
 
 			var grid = new GridBackground();
 			Insert(0, grid);
@@ -24,21 +24,28 @@ namespace SceneTransition.Editor.GraphViews
 			style.flexShrink = 1;
 		}
 
-		private IManipulator CreateLoadSceneManipulator()
+		private IManipulator CreateNodeManipulator()
 		{
 			var manipulator = new ContextualMenuManipulator(
-				menuEvent => menuEvent.menu.AppendAction(
-					"新增/讀取場景",
-					actionEvent => CreateLoadSceneNode(actionEvent.eventInfo.localMousePosition)
-				)
-			);
+				menuEvent =>
+				{
+					menuEvent.menu.AppendAction(
+						"新增/讀取場景",
+						actionEvent => CreateNode<LoadSceneNode>(actionEvent.eventInfo.localMousePosition)
+					);
+
+					menuEvent.menu.AppendAction(
+						"新增/卸載所有場景",
+						actionEvent => CreateNode<UnloadAllScenesNode>(actionEvent.eventInfo.localMousePosition)
+					);
+				});
 
 			return manipulator;
 		}
 
-		private void CreateLoadSceneNode(Vector2 position)
+		private void CreateNode<T>(Vector2 position) where T : Node, new()
 		{
-			var node = new LoadSceneNode();
+			var node = new T();
 			node.SetPosition(new Rect(position, Vector2.zero));
 
 			AddElement(node);

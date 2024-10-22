@@ -7,27 +7,12 @@ using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
-	public class LoadSceneNode : Node
+	public class LoadSceneNode : WorkflowNode
 	{
-		public string         NodeID         { get; private set; }
-		public Port           Input          { get; private set; }
-		public Port           Output         { get; private set; }
 		public AssetReference SceneReference { get; private set; }
 
-		public LoadSceneNode()
+		public LoadSceneNode() : base("讀取場景")
 		{
-			NodeID = System.Guid.NewGuid().ToString();
-
-			title = "讀取場景";
-
-			Input          = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
-			Input.portName = "執行";
-			inputContainer.Add(Input);
-
-			Output          = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-			Output.portName = "下一步";
-			outputContainer.Add(Output);
-
 			var objectField = new ObjectField("場景資源")
 			{
 				objectType        = typeof(Object),
@@ -43,11 +28,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			});
 
 			mainContainer.Add(objectField);
-
-			AddToClassList("scene-workflow-node");
-
-			RefreshExpandedState();
-			RefreshPorts();
 		}
 	}
 }
