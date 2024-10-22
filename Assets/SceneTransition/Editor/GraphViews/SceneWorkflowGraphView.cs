@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using SceneTransition.Editor.GraphViews.Nodes;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews
@@ -12,6 +14,7 @@ namespace SceneTransition.Editor.GraphViews
 			this.AddManipulator(new SelectionDragger());
 			this.AddManipulator(new RectangleSelector());
 			this.AddManipulator(new ContentZoomer());
+			this.AddManipulator(CreateLoadSceneManipulator());
 
 			var grid = new GridBackground();
 			Insert(0, grid);
@@ -19,6 +22,26 @@ namespace SceneTransition.Editor.GraphViews
 
 			style.flexGrow   = 1;
 			style.flexShrink = 1;
+		}
+
+		private IManipulator CreateLoadSceneManipulator()
+		{
+			var manipulator = new ContextualMenuManipulator(
+				menuEvent => menuEvent.menu.AppendAction(
+					"新增/讀取場景",
+					actionEvent => CreateLoadSceneNode(actionEvent.eventInfo.localMousePosition)
+				)
+			);
+
+			return manipulator;
+		}
+
+		private void CreateLoadSceneNode(Vector2 position)
+		{
+			var node = new LoadSceneNode();
+			node.SetPosition(new Rect(position, Vector2.zero));
+
+			AddElement(node);
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)

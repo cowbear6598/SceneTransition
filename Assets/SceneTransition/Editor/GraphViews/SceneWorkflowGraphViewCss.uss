@@ -15,3 +15,63 @@ GridBackground {
     --thick-line-color: rgba(255, 255, 255, 0.1);
     --spacing: 25;
 }
+
+/* Node */
+
+.scene-workflow-node {
+    background-color: #383838;
+    padding: 8px;
+    min-width: 200px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #666666;
+}
+
+.scene-workflow-node #title {
+    background-color: #4CAF50;
+    padding: 8px;
+    border-radius: 4px 4px 0 0;
+}
+
+.scene-workflow-node #title-label {
+    color: #ffffff;
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.scene-workflow-node .unity-label {
+    color: #E0E0E0;
+    font-size: 12px;
+    padding: 4px;
+}
+
+.scene-workflow-node .unity-object-field {
+    padding: 4px;
+    margin: 4px;
+    background-color: #424242;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: #555555;
+}
+
+.scene-workflow-node .unity-object-field__label {
+    color: #E0E0E0;
+    -unity-font-style: bold;
+}
+
+.scene-workflow-node .unity-object-field__input {
+    background-color: #2A2A2A;
+    border-color: #666666;
+    border-width: 1px;
+    border-radius: 2px;
+}
+
+.scene-workflow-node .port {
+    margin: 4px 0;
+    padding: 4px;
+}
+
+.scene-workflow-node .port-input #type {
+    color: #E0E0E0;
+    font-size: 12px;
+}

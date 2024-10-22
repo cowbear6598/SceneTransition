@@ -2,7 +2,7 @@
     "name": "SceneTransition.Editor",
     "rootNamespace": "",
     "references": [
-        ""
+        "Unity.Addressables"
     ],
     "includePlatforms": [
         "Editor"
