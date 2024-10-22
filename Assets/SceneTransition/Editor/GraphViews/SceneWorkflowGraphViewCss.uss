@@ -1,0 +1,17 @@
+.workflow-graph-view {
+    background-color: rgb(40, 40, 40);
+}
+
+GridBackground {
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(255, 255, 255, 0.05);
+    --thick-line-color: rgba(255, 255, 255, 0.1);
+    --spacing: 25;
+}
+
+.workflow-graph-view > GridBackground {
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(255, 255, 255, 0.05);
+    --thick-line-color: rgba(255, 255, 255, 0.1);
+    --spacing: 25;
+}

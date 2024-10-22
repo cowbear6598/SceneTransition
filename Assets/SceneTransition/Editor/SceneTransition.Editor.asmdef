@@ -1,7 +1,9 @@
 {
     "name": "SceneTransition.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        ""
+    ],
     "includePlatforms": [
         "Editor"
     ],
