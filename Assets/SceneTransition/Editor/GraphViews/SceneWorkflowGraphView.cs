@@ -38,6 +38,16 @@ namespace SceneTransition.Editor.GraphViews
 						"新增/卸載所有場景",
 						actionEvent => CreateNode<UnloadAllScenesNode>(actionEvent.eventInfo.localMousePosition)
 					);
+
+					menuEvent.menu.AppendAction(
+						"轉場/進入",
+						actionEvent => CreateNode<TransitionInNode>(actionEvent.eventInfo.localMousePosition)
+					);
+
+					menuEvent.menu.AppendAction(
+						"轉場/退出",
+						actionEvent => CreateNode<TransitionOutNode>(actionEvent.eventInfo.localMousePosition)
+					);
 				});
 
 			return manipulator;

@@ -17,15 +17,44 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			{
 				objectType        = typeof(Object),
 				allowSceneObjects = false,
-				style             = { marginTop = 8, marginBottom = 8 }
+				style             = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
 			};
 
 			objectField.RegisterValueChangedCallback(evt =>
 			{
-				SceneReference = evt.newValue != null
-					? new AssetReference(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(evt.newValue)))
-					: null;
+				if (evt.newValue == null)
+				{
+					SceneReference = null;
+
+					return;
+				}
+
+				var assetPath = AssetDatabase.GetAssetPath(evt.newValue);
+
+				if (!assetPath.EndsWith(".unity"))
+				{
+					Debug.LogError($"{evt.newValue.name} 不是場景。");
+
+					objectField.SetValueWithoutNotify(null);
+					SceneReference = null;
+
+					return;
+				}
+
+				var guid = AssetDatabase.AssetPathToGUID(assetPath);
+
+				if (UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid) != null)
+				{
+					SceneReference = new AssetReference(guid);
+				}
+				else
+				{
+					Debug.LogError($"場景資源 '{evt.newValue.name}' 不在 Addressable 資源中");
+					objectField.SetValueWithoutNotify(null);
+					SceneReference = null;
+				}
 			});
+
 
 			mainContainer.Add(objectField);
 		}
