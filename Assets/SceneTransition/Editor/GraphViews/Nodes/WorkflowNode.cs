@@ -1,4 +1,5 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using SceneTransition.Runtime.Infrastructure.ScriptableObjects.Settings;
+using UnityEditor.Experimental.GraphView;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
@@ -7,6 +8,8 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		public string NodeId { get; private set; }
 		public Port   Input  { get; private set; }
 		public Port   Output { get; private set; }
+
+		public abstract OperationType OperationType { get; }
 
 		protected WorkflowNode(string title)
 		{
@@ -29,5 +32,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			RefreshExpandedState();
 			RefreshPorts();
 		}
+
+		public void SetNodeId(string nodeId) => NodeId = nodeId;
 	}
 }

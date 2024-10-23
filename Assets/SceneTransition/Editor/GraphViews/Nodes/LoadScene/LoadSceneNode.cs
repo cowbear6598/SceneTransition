@@ -1,15 +1,17 @@
-﻿using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+﻿using SceneTransition.Runtime.Infrastructure.ScriptableObjects.Settings;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UIElements;
 
-namespace SceneTransition.Editor.GraphViews.Nodes
+namespace SceneTransition.Editor.GraphViews.Nodes.LoadScene
 {
 	public class LoadSceneNode : WorkflowNode
 	{
-		public AssetReference SceneReference { get; private set; }
+		public AssetReference SceneAsset { get; private set; }
+
+		public override OperationType OperationType => OperationType.LoadScene;
 
 		public LoadSceneNode() : base("讀取場景")
 		{
@@ -24,19 +26,19 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			{
 				if (evt.newValue == null)
 				{
-					SceneReference = null;
+					SceneAsset = null;
 
 					return;
 				}
 
-				var assetPath = AssetDatabase.GetAssetPath(evt.newValue);
+				var assetPath = AssetDatabase.GetAssetPath((Object)evt.newValue);
 
 				if (!assetPath.EndsWith(".unity"))
 				{
 					Debug.LogError($"{evt.newValue.name} 不是場景。");
 
 					objectField.SetValueWithoutNotify(null);
-					SceneReference = null;
+					SceneAsset = null;
 
 					return;
 				}
@@ -45,13 +47,13 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 				if (UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid) != null)
 				{
-					SceneReference = new AssetReference(guid);
+					SceneAsset = new AssetReference(guid);
 				}
 				else
 				{
 					Debug.LogError($"場景資源 '{evt.newValue.name}' 不在 Addressable 資源中");
 					objectField.SetValueWithoutNotify(null);
-					SceneReference = null;
+					SceneAsset = null;
 				}
 			});
 

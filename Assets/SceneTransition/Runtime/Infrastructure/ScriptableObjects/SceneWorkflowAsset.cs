@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SceneTransition.Runtime.Domain;
 using SceneTransition.Runtime.Domain.Adapters;
+using SceneTransition.Runtime.Infrastructure.ScriptableObjects.Settings;
 using UnityEngine;
 
 namespace SceneTransition.Runtime.Infrastructure.ScriptableObjects
@@ -8,31 +9,36 @@ namespace SceneTransition.Runtime.Infrastructure.ScriptableObjects
 	[CreateAssetMenu(fileName = "SceneWorkflowAsset", menuName = "SceneTransition/SceneWorkflowAsset")]
 	public class SceneWorkflowAsset : ScriptableObject
 	{
-		[SerializeField, HideInInspector] private string _editorData;
+		[SerializeField] private string _editorData;
 
-		[SerializeField] private List<Operation> _operations = new();
+		[SerializeField] private List<Settings.Settings> _settings = new();
 
 		public SceneWorkflow CreateWorkflow(ISceneTransition transition)
 		{
 			var workflow = new SceneWorkflow(transition);
 
-			foreach (var operation in _operations)
+			foreach (var settings in _settings)
 			{
-				switch (operation.Type)
+				switch (settings)
 				{
-					case OperationType.LoadScene:
-						workflow.LoadScene(operation.SceneAsset);
+					case LoadSceneSettings loadSceneSettings:
+						workflow.LoadScene(loadSceneSettings.SceneAsset);
 
 						break;
-					case OperationType.UnloadAllScenes:
+					case UnloadAllScenesSettings unloadAllScenesSettings:
 						workflow.UnloadAllScenes();
 
 						break;
-					case OperationType.TransitionIn:
+					case UnloadLastSceneSettings unloadLastSceneSettings:
+						workflow.UnloadLastScene();
+
+						break;
+
+					case TransitionInSettings transitionInSettings:
 						workflow.TransitionIn();
 
 						break;
-					case OperationType.TransitionOut:
+					case TransitionOutSettings transitionOutSettings:
 						workflow.TransitionOut();
 
 						break;
@@ -43,13 +49,13 @@ namespace SceneTransition.Runtime.Infrastructure.ScriptableObjects
 		}
 
 #if UNITY_EDITOR
-		public string EditorData {
-			get => _editorData;
-			set => _editorData = value;
-		}
+		public string EditorData => _editorData;
 
-		public void SetOperations(List<Operation> operations)
-			=> this._operations = operations;
+		public void SetEditorData(string editorData)
+			=> _editorData = editorData;
+
+		public void SetSettings(List<Settings.Settings> operations)
+			=> _settings = operations;
 #endif
 	}
 }
