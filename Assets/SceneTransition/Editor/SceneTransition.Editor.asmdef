@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Unity.Addressables",
-        "Unity.Addressables.Editor"
+        "Unity.Addressables.Editor",
+        "SceneTransition"
     ],
     "includePlatforms": [
         "Editor"
