@@ -49,26 +49,34 @@ namespace SceneTransition.Editor.GraphViews
 			{
 				menuEvent.menu.AppendAction(
 					"新增/讀取場景",
-					actionEvent => CreateNode<LoadSceneNode>(actionEvent.eventInfo.localMousePosition)
+					actionEvent => CreateNode<LoadSceneNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
 				);
 
 				menuEvent.menu.AppendAction(
 					"新增/卸載所有場景",
-					actionEvent => CreateNode<UnloadAllScenesNode>(actionEvent.eventInfo.localMousePosition)
+					actionEvent => CreateNode<UnloadAllScenesNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/進入",
-					actionEvent => CreateNode<TransitionInNode>(actionEvent.eventInfo.localMousePosition)
+					actionEvent => CreateNode<TransitionInNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/退出",
-					actionEvent => CreateNode<TransitionOutNode>(actionEvent.eventInfo.localMousePosition)
+					actionEvent => CreateNode<TransitionOutNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
 				);
 			});
 
 			this.AddManipulator(manipulator);
+		}
+
+		// 取得正確的滑鼠位置
+		private Vector2 GetCorrectMousePosition(Vector2 mousePosition)
+		{
+			Vector2 viewPosition = viewTransform.matrix.inverse.MultiplyPoint3x4(mousePosition);
+
+			return viewPosition;
 		}
 
 		// 建立節點
