@@ -43,10 +43,10 @@ namespace SceneTransition.Editor.Windows
 		{
 			var toolbar = new Toolbar();
 
-			var loadButton    = new ToolbarButton(Load) { text    = "載入" };
-			var saveButton    = new ToolbarButton(Save) { text    = "儲存" };
-			var saveAsButton  = new ToolbarButton(SaveAs) { text  = "另存新檔" };
-			var showAllButton = new ToolbarButton(ShowAll) { text = "顯示全部" };
+			var loadButton    = new ToolbarButton(() => Load()) { text = "載入" };
+			var saveButton    = new ToolbarButton(Save) { text         = "儲存" };
+			var saveAsButton  = new ToolbarButton(SaveAs) { text       = "另存新檔" };
+			var showAllButton = new ToolbarButton(ShowAll) { text      = "顯示全部" };
 
 			toolbar.Add(loadButton);
 			toolbar.Add(saveButton);
@@ -59,34 +59,45 @@ namespace SceneTransition.Editor.Windows
 
 		#endregion
 
-		private void Load()
+		public void Load(SceneWorkflowAsset workflowAsset = null)
 		{
-			var path = EditorUtility.OpenFilePanelWithFilters(
-				"載入場景轉換流程",
-				"Assets",
-				new[] { "場景轉換流程", "asset" }
-			);
+			SceneWorkflowAsset asset;
 
-			if (string.IsNullOrEmpty(path))
-				return;
-
-			path = FileUtil.GetProjectRelativePath(path);
-
-			var asset = AssetDatabase.LoadAssetAtPath<SceneWorkflowAsset>(path);
-
-			if (asset == null)
+			if (workflowAsset == null)
 			{
-				EditorUtility.DisplayDialog("載入失敗", "無法載入指定的檔案", "確定");
+				var path = EditorUtility.OpenFilePanelWithFilters(
+					"載入場景轉換流程",
+					"Assets",
+					new[] { "場景轉換流程", "asset" }
+				);
+
+				if (string.IsNullOrEmpty(path))
+					return;
+
+				path = FileUtil.GetProjectRelativePath(path);
+
+				asset = AssetDatabase.LoadAssetAtPath<SceneWorkflowAsset>(path);
+			}
+			else
+				asset = workflowAsset;
+
+			_workflowAsset = asset;
+			_graphView.LoadFromAsset(asset);
+			titleContent = new GUIContent($"{asset.name}");
+		}
+
+		private void Save()
+		{
+			if (_workflowAsset == null)
+			{
+				SaveAs();
 
 				return;
 			}
 
-			_workflowAsset = asset;
-			_graphView.LoadFromAsset(asset);
-			titleContent = new GUIContent($"{path.Substring(path.LastIndexOf('/') + 1)}");
+			_workflowAsset.ClearOperations();
+			_graphView.SaveToAsset(_workflowAsset);
 		}
-
-		private void Save() { }
 
 		private void SaveAs()
 		{

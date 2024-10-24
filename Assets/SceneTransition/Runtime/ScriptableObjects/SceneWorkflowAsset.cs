@@ -32,6 +32,8 @@ namespace SceneTransition.ScriptableObjects
 		public void AddOperation(OperationData operationData)
 			=> _operationData.Add(operationData);
 
+		public void ClearOperations() => _operationData.Clear();
+
 		#endif
 	}
 }

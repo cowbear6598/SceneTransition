@@ -5,7 +5,7 @@ namespace SceneTransition
 {
 	public class SceneRepository
 	{
-		public static SceneRepository Instance { get; } = new SceneRepository();
+		public static SceneRepository Instance { get; } = new();
 
 		private readonly Stack<SceneInstance> loadedScene = new();
 
