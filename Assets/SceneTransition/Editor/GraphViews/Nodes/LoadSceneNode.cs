@@ -1,4 +1,5 @@
 ﻿using SceneTransition.Operations;
+using SceneTransition.ScriptableObjects.Data;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,8 +11,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	public class LoadSceneNode : WorkflowNode
 	{
 		public AssetReference SceneAsset { get; private set; }
-
-		public override OperationType OperationType => OperationType.LoadScene;
 
 		private readonly ObjectField _objectField;
 
@@ -62,11 +61,17 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_objectField);
 		}
 
-		public void SetSceneAsset(AssetReference sceneAsset)
+		public void SetSceneAssetByLoad(AssetReference sceneAsset)
 		{
 			SceneAsset = sceneAsset;
 
 			_objectField.SetValueWithoutNotify(sceneAsset?.editorAsset);
 		}
+
+		public override OperationType OperationType => OperationType.LoadScene;
+		public override OperationData CreateOperationData() => new LoadSceneOperationData(
+			JsonUtility.ToJson(NodeData),
+			SceneAsset
+		);
 	}
 }

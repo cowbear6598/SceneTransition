@@ -1,4 +1,5 @@
 ﻿using SceneTransition.Operations;
+using SceneTransition.ScriptableObjects.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -33,5 +34,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			RefreshExpandedState();
 			RefreshPorts();
 		}
+
+		public abstract OperationData CreateOperationData();
 	}
 }

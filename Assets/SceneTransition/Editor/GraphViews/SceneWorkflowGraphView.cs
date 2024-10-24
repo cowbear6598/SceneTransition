@@ -81,7 +81,7 @@ namespace SceneTransition.Editor.GraphViews
 		}
 
 		// 取得縮放後的滑鼠位置
-		private Vector2 GetCorrectMousePosition(Vector2 mousePosition)
+		private Vector2 GetMousePositionInWorldSpace(Vector2 mousePosition)
 		{
 			Vector2 viewPosition = viewTransform.matrix.inverse.MultiplyPoint3x4(mousePosition);
 
@@ -90,7 +90,7 @@ namespace SceneTransition.Editor.GraphViews
 
 		private void DropdownCreateNode<T>(DropdownMenuAction action) where T : WorkflowNode, new()
 		{
-			var mousePosition = GetCorrectMousePosition(action.eventInfo.localMousePosition);
+			var mousePosition = GetMousePositionInWorldSpace(action.eventInfo.localMousePosition);
 
 			CreateNode<T>(mousePosition);
 		}
@@ -130,7 +130,7 @@ namespace SceneTransition.Editor.GraphViews
 
 		public void SaveToAsset(SceneWorkflowAsset asset)
 		{
-			if (!ValidateGraph(out var errorMessage))
+			if (!ValidateSave(out var errorMessage))
 				throw new Exception(errorMessage);
 
 			// 儲存節點資料
@@ -169,24 +169,13 @@ namespace SceneTransition.Editor.GraphViews
 
 			while (currentNode != null)
 			{
-				var nodeData = JsonUtility.ToJson(currentNode.NodeData);
-
-				asset.AddOperation(currentNode switch
-				{
-					LoadSceneNode node  => new LoadSceneOperationData(nodeData, node.SceneAsset),
-					UnloadAllScenesNode => new UnloadAllScenesOperationData(nodeData),
-					UnloadLastSceneNode => new UnloadLastSceneOperationData(nodeData),
-					TransitionInNode    => new TransitionInOperationData(nodeData),
-					TransitionOutNode   => new TransitionOutOperationData(nodeData),
-					_                   => throw new Exception("未知的節點類型！"),
-				});
-
+				asset.AddOperation(currentNode.CreateOperationData());
 				currentNode = workflowNodes.FirstOrDefault(n => n.NodeData.Id == currentNode.NodeData.OutputNodeId);
 			}
 		}
 
 		// 驗證可否儲存
-		private bool ValidateGraph(out string errorMessage)
+		private bool ValidateSave(out string errorMessage)
 		{
 			errorMessage = string.Empty;
 
@@ -199,48 +188,26 @@ namespace SceneTransition.Editor.GraphViews
 				return false;
 			}
 
-			// 檢查起點是否只有一個
-			var startNodes = nodes.Where(
-				node => !node.Input.connected
-			).ToList();
+			// 檢查起/終點是否只有一個
+			var startNodes = nodes.Count(node => !node.Input.connected);
+			var endNodes   = nodes.Count(node => !node.Output.connected);
 
-			if (startNodes.Count != 1)
+			if (startNodes != 1)
 			{
-				errorMessage = "請確保只有一個起點！";
+				errorMessage = startNodes == 0 ? "請確保有起點！" : "請確保只有一個起點！";
 
 				return false;
 			}
 
-			if (startNodes.Count == 0)
+			if (endNodes != 1)
 			{
-				errorMessage = "請確保有起點！";
-
-				return false;
-			}
-
-			// 檢查終點是否只有一個
-			var endNodes = nodes.Where(
-				node => !node.Output.connected
-			).ToList();
-
-			if (endNodes.Count != 1)
-			{
-				errorMessage = "請確保只有一個終點！";
-
-				return false;
-			}
-
-			if (endNodes.Count == 0)
-			{
-				errorMessage = "請確保有終點！";
+				errorMessage = endNodes == 0 ? "請確保有終點！" : "請確保只有一個終點！";
 
 				return false;
 			}
 
 			// 檢查讀取場景有沒有放入場景資源
-			var loadSceneNodes = nodes.OfType<LoadSceneNode>();
-
-			if (loadSceneNodes.Any(loadNode => loadNode.SceneAsset == null))
+			if (nodes.OfType<LoadSceneNode>().Any(n => n.SceneAsset == null))
 			{
 				errorMessage = "有 LoadScene 節點未設置場景資源！";
 
@@ -254,7 +221,7 @@ namespace SceneTransition.Editor.GraphViews
 		{
 			DeleteElements(graphElements.ToList());
 
-			var nodePair = new Dictionary<string, WorkflowNode>();
+			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
 
 			foreach (var operationData in asset.OperationData)
 			{
@@ -270,12 +237,12 @@ namespace SceneTransition.Editor.GraphViews
 					_                             => throw new Exception("未知的操作類型！"),
 				};
 
-				node.NodeData.Id      = nodeData.Id;
-				nodePair[nodeData.Id] = node;
+				node.NodeData.Id              = nodeData.Id;
+				nodeIdToInstance[nodeData.Id] = node;
 
 				if (node is LoadSceneNode loadSceneNode)
 				{
-					loadSceneNode.SetSceneAsset((operationData as LoadSceneOperationData)?.SceneAsset);
+					loadSceneNode.SetSceneAssetByLoad((operationData as LoadSceneOperationData)?.SceneAsset);
 				}
 			}
 
@@ -283,9 +250,9 @@ namespace SceneTransition.Editor.GraphViews
 			{
 				var nodeData = JsonUtility.FromJson<NodeData>(operationData.NodeData);
 
-				if (string.IsNullOrEmpty(nodeData.OutputNodeId)            ||
-				    !nodePair.TryGetValue(nodeData.Id, out var outputNode) ||
-				    !nodePair.TryGetValue(nodeData.OutputNodeId, out var inputNode)
+				if (string.IsNullOrEmpty(nodeData.OutputNodeId)                    ||
+				    !nodeIdToInstance.TryGetValue(nodeData.Id, out var outputNode) ||
+				    !nodeIdToInstance.TryGetValue(nodeData.OutputNodeId, out var inputNode)
 				   )
 					continue;
 
