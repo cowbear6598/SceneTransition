@@ -272,6 +272,11 @@ namespace SceneTransition.Editor.GraphViews
 
 				node.NodeData.Id      = nodeData.Id;
 				nodePair[nodeData.Id] = node;
+
+				if (node is LoadSceneNode loadSceneNode)
+				{
+					loadSceneNode.SetSceneAsset((operationData as LoadSceneOperationData)?.SceneAsset);
+				}
 			}
 
 			foreach (var operationData in asset.OperationData)

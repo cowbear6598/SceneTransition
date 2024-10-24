@@ -9,20 +9,22 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public class LoadSceneNode : WorkflowNode
 	{
-		public AssetReference SceneAsset;
+		public AssetReference SceneAsset { get; private set; }
 
 		public override OperationType OperationType => OperationType.LoadScene;
 
+		private readonly ObjectField _objectField;
+
 		public LoadSceneNode() : base("讀取場景")
 		{
-			var objectField = new ObjectField("場景資源")
+			_objectField = new ObjectField("場景資源")
 			{
 				objectType        = typeof(Object),
 				allowSceneObjects = false,
 				style             = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
 			};
 
-			objectField.RegisterValueChangedCallback(evt =>
+			_objectField.RegisterValueChangedCallback(evt =>
 			{
 				if (evt.newValue == null)
 				{
@@ -31,13 +33,13 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 					return;
 				}
 
-				var assetPath = AssetDatabase.GetAssetPath((Object)evt.newValue);
+				var assetPath = AssetDatabase.GetAssetPath(evt.newValue);
 
 				if (!assetPath.EndsWith(".unity"))
 				{
 					Debug.LogError($"{evt.newValue.name} 不是場景。");
 
-					objectField.SetValueWithoutNotify(null);
+					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
 
 					return;
@@ -52,13 +54,19 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				else
 				{
 					Debug.LogError($"場景資源 '{evt.newValue.name}' 不在 Addressable 資源中");
-					objectField.SetValueWithoutNotify(null);
+					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
 				}
 			});
 
+			mainContainer.Add(_objectField);
+		}
 
-			mainContainer.Add(objectField);
+		public void SetSceneAsset(AssetReference sceneAsset)
+		{
+			SceneAsset = sceneAsset;
+
+			_objectField.SetValueWithoutNotify(sceneAsset?.editorAsset);
 		}
 	}
 }
