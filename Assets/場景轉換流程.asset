@@ -12,4 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb25dde2dcf147b7962eb4a4e9ab5110, type: 3}
   m_Name: "\u5834\u666F\u8F49\u63DB\u6D41\u7A0B"
   m_EditorClassIdentifier: 
-  _editorData: '{}'
+  _operationData:
+  - rid: 2047251575635443747
+  - rid: 2047251575635443748
+  - rid: 2047251575635443749
+  references:
+    version: 2
+    RefIds:
+    - rid: 2047251575635443747
+      type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        NodeData: '{"Id":"b02bf05a-215c-49aa-90ac-dbc921e41ecf","Position":{"x":0.0,"y":0.0},"InputNodeId":"","OutputNodeId":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a"}'
+        Type: 3
+    - rid: 2047251575635443748
+      type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        NodeData: '{"Id":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a","Position":{"x":138.39999389648438,"y":165.60000610351563},"InputNodeId":"b02bf05a-215c-49aa-90ac-dbc921e41ecf","OutputNodeId":"617c62bd-04b4-4e61-bd2a-d757b1c05acb"}'
+        Type: 1
+    - rid: 2047251575635443749
+      type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        NodeData: '{"Id":"617c62bd-04b4-4e61-bd2a-d757b1c05acb","Position":{"x":450.3999938964844,"y":213.60000610351563},"InputNodeId":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a","OutputNodeId":""}'
+        Type: 4

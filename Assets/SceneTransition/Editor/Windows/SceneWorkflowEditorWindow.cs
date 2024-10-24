@@ -1,6 +1,6 @@
 ﻿using System;
 using SceneTransition.Editor.GraphViews;
-using SceneTransition.Runtime.Infrastructure.ScriptableObjects;
+using SceneTransition.ScriptableObjects;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -77,6 +77,7 @@ namespace SceneTransition.Editor.Windows
 			if (asset == null)
 			{
 				EditorUtility.DisplayDialog("載入失敗", "無法載入指定的檔案", "確定");
+
 				return;
 			}
 

@@ -1,19 +1,20 @@
-﻿using SceneTransition.Runtime.Infrastructure.ScriptableObjects.Settings;
+﻿using SceneTransition.Operations;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public abstract class WorkflowNode : Node
 	{
-		public string NodeId { get; private set; }
-		public Port   Input  { get; private set; }
-		public Port   Output { get; private set; }
+		public NodeData NodeData { get; private set; } = new();
+		public Port     Input    { get; private set; }
+		public Port     Output   { get; private set; }
 
 		public abstract OperationType OperationType { get; }
 
 		protected WorkflowNode(string title)
 		{
-			NodeId = System.Guid.NewGuid().ToString();
+			NodeData.Id = System.Guid.NewGuid().ToString();
 
 			this.title = title;
 
@@ -32,7 +33,5 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			RefreshExpandedState();
 			RefreshPorts();
 		}
-
-		public void SetNodeId(string nodeId) => NodeId = nodeId;
 	}
 }

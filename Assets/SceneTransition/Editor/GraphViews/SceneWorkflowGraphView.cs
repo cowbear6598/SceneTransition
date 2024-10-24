@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SceneTransition.Editor.Data;
 using SceneTransition.Editor.GraphViews.Nodes;
-using SceneTransition.Editor.GraphViews.Nodes.LoadScene;
-using SceneTransition.Editor.GraphViews.Nodes.TransitionIn;
-using SceneTransition.Editor.GraphViews.Nodes.TransitionOut;
-using SceneTransition.Editor.GraphViews.Nodes.UnloadAllScenes;
-using SceneTransition.Editor.GraphViews.Nodes.UnloadLastScene;
 using SceneTransition.Editor.Windows;
-using SceneTransition.Runtime.Infrastructure.ScriptableObjects;
-using SceneTransition.Runtime.Infrastructure.ScriptableObjects.Settings;
+using SceneTransition.Operations;
+using SceneTransition.ScriptableObjects;
+using SceneTransition.ScriptableObjects.Data;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -63,29 +58,29 @@ namespace SceneTransition.Editor.GraphViews
 			{
 				menuEvent.menu.AppendAction(
 					"新增/讀取場景",
-					actionEvent => CreateNode<LoadSceneNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
+					DropdownCreateNode<LoadSceneNode>
 				);
 
 				menuEvent.menu.AppendAction(
 					"新增/卸載所有場景",
-					actionEvent => CreateNode<UnloadAllScenesNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
+					DropdownCreateNode<UnloadAllScenesNode>
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/進入",
-					actionEvent => CreateNode<TransitionInNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
+					DropdownCreateNode<TransitionInNode>
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/退出",
-					actionEvent => CreateNode<TransitionOutNode>(GetCorrectMousePosition(actionEvent.eventInfo.localMousePosition))
+					DropdownCreateNode<TransitionOutNode>
 				);
 			});
 
 			this.AddManipulator(manipulator);
 		}
 
-		// 取得正確的滑鼠位置
+		// 取得縮放後的滑鼠位置
 		private Vector2 GetCorrectMousePosition(Vector2 mousePosition)
 		{
 			Vector2 viewPosition = viewTransform.matrix.inverse.MultiplyPoint3x4(mousePosition);
@@ -93,8 +88,14 @@ namespace SceneTransition.Editor.GraphViews
 			return viewPosition;
 		}
 
-		// 建立節點
-		private T CreateNode<T>(Vector2 position) where T : Node, new()
+		private void DropdownCreateNode<T>(DropdownMenuAction action) where T : WorkflowNode, new()
+		{
+			var mousePosition = GetCorrectMousePosition(action.eventInfo.localMousePosition);
+
+			CreateNode<T>(mousePosition);
+		}
+
+		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
 		{
 			var node = new T();
 			node.SetPosition(new Rect(position, Vector2.zero));
@@ -104,7 +105,7 @@ namespace SceneTransition.Editor.GraphViews
 			return node;
 		}
 
-		// 連接節點
+		// 定義節點可連接的 Port
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
 		{
 			var compatiblePorts = new List<Port>();
@@ -132,85 +133,55 @@ namespace SceneTransition.Editor.GraphViews
 			if (!ValidateGraph(out var errorMessage))
 				throw new Exception(errorMessage);
 
-			var editorData = new SceneWorkflowEditorData();
+			// 儲存節點資料
+			SaveNodeData();
 
-			// 儲存節點
-			SaveNodeData(editorData);
-
-			// 儲存連接
-			SaveConnectionData(editorData);
-
-			var settings = editorData.GenerateSettings();
-
-			asset.SetSettings(settings);
-
-			Debug.Log(JsonUtility.ToJson(editorData));
-			asset.SetEditorData(JsonUtility.ToJson(editorData));
+			// 儲存至 Asset
+			ApplyToAsset(asset);
 		}
 
-		private void SaveNodeData(SceneWorkflowEditorData editorData)
+		private void SaveNodeData()
 		{
-			foreach (var node in nodes.ToList().OfType<WorkflowNode>())
+			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
+
+			foreach (var node in workflowNodes)
 			{
-				NodeData nodeData = node switch
-				{
-					LoadSceneNode loadSceneNode => new LoadSceneNodeData
-					{
-						Id         = loadSceneNode.NodeId,
-						Position   = loadSceneNode.GetPosition().position,
-						SceneAsset = loadSceneNode.SceneAsset,
-					},
-
-					UnloadAllScenesNode unloadAllScenesNode => new UnloadAllScenesNodeData
-					{
-						Id       = unloadAllScenesNode.NodeId,
-						Position = unloadAllScenesNode.GetPosition().position,
-					},
-
-					UnloadLastSceneNode unloadLastSceneNode => new UnloadLastSceneNodeData
-					{
-						Id       = unloadLastSceneNode.NodeId,
-						Position = unloadLastSceneNode.GetPosition().position,
-					},
-
-					TransitionInNode transitionInNode => new TransitionInNodeData
-					{
-						Id       = transitionInNode.NodeId,
-						Position = transitionInNode.GetPosition().position,
-					},
-
-					TransitionOutNode transitionOutNode => new TransitionOutNodeData
-					{
-						Id       = transitionOutNode.NodeId,
-						Position = transitionOutNode.GetPosition().position,
-					},
-
-					_ => null,
-				};
-
-				if (nodeData == null)
-					throw new Exception("未知的節點類型！");
-
-				editorData.AddNodeData(nodeData);
+				node.NodeData.Position = node.GetPosition().position;
 			}
-		}
 
-		private void SaveConnectionData(SceneWorkflowEditorData editorData)
-		{
 			foreach (var edge in edges)
 			{
 				if (edge.output.node is not WorkflowNode outputNode ||
 				    edge.input.node is not WorkflowNode inputNode)
 					continue;
 
-				var outputNodeData = editorData.FindNodeDataById(outputNode.NodeId);
-				var inputNodeData  = editorData.FindNodeDataById(inputNode.NodeId);
+				outputNode.NodeData.OutputNodeId = inputNode.NodeData.Id;
+				inputNode.NodeData.InputNodeId   = outputNode.NodeData.Id;
+			}
+		}
 
-				if (outputNodeData == null || inputNodeData == null)
-					continue;
+		private void ApplyToAsset(SceneWorkflowAsset asset)
+		{
+			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
+			var startNode     = workflowNodes.First(node => !node.Input.connected);
 
-				outputNodeData.OutputNodeId = inputNode.NodeId;
-				inputNodeData.InputNodeId   = outputNode.NodeId;
+			var currentNode = startNode;
+
+			while (currentNode != null)
+			{
+				var nodeData = JsonUtility.ToJson(currentNode.NodeData);
+
+				asset.AddOperation(currentNode switch
+				{
+					LoadSceneNode node  => new LoadSceneOperationData(nodeData, node.SceneAsset),
+					UnloadAllScenesNode => new UnloadAllScenesOperationData(nodeData),
+					UnloadLastSceneNode => new UnloadLastSceneOperationData(nodeData),
+					TransitionInNode    => new TransitionInOperationData(nodeData),
+					TransitionOutNode   => new TransitionOutOperationData(nodeData),
+					_                   => throw new Exception("未知的節點類型！"),
+				});
+
+				currentNode = workflowNodes.FirstOrDefault(n => n.NodeData.Id == currentNode.NodeData.OutputNodeId);
 			}
 		}
 
@@ -281,38 +252,32 @@ namespace SceneTransition.Editor.GraphViews
 
 		public void LoadFromAsset(SceneWorkflowAsset asset)
 		{
-			var editorData = JsonUtility.FromJson<SceneWorkflowEditorData>(asset.EditorData);
-
-			if (editorData == null)
-				throw new Exception("無法讀取編輯器資料！");
-
 			DeleteElements(graphElements.ToList());
 
 			var nodePair = new Dictionary<string, WorkflowNode>();
 
-			foreach (var nodeData in editorData.Nodes)
+			foreach (var operationData in asset.OperationData)
 			{
-				WorkflowNode node = nodeData.Type switch
+				var nodeData = JsonUtility.FromJson<NodeData>(operationData.NodeData);
+
+				WorkflowNode node = operationData.Type switch
 				{
 					OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
 					OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
 					OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
 					OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
 					OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
-					_                             => null,
+					_                             => throw new Exception("未知的操作類型！"),
 				};
 
-				if (node == null)
-					continue;
-
-				node.SetNodeId(nodeData.Id);
-
+				node.NodeData.Id      = nodeData.Id;
 				nodePair[nodeData.Id] = node;
 			}
 
-			// 重建連接
-			foreach (var nodeData in editorData.Nodes)
+			foreach (var operationData in asset.OperationData)
 			{
+				var nodeData = JsonUtility.FromJson<NodeData>(operationData.NodeData);
+
 				if (string.IsNullOrEmpty(nodeData.OutputNodeId)            ||
 				    !nodePair.TryGetValue(nodeData.Id, out var outputNode) ||
 				    !nodePair.TryGetValue(nodeData.OutputNodeId, out var inputNode)
