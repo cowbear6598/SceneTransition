@@ -1,5 +1,4 @@
-﻿using SceneTransition.Operations;
-using SceneTransition.ScriptableObjects.Data;
+﻿using SceneTransition.ScriptableObjects.Data;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -67,8 +66,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 			_objectField.SetValueWithoutNotify(sceneAsset?.editorAsset);
 		}
-
-		public override OperationType OperationType => OperationType.LoadScene;
 
 		protected override OperationData MakeOperationData(string nodeData)
 			=> new LoadSceneOperationData(nodeData, SceneAsset);

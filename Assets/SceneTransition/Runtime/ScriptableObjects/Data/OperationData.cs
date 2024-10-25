@@ -11,7 +11,7 @@ namespace SceneTransition.ScriptableObjects.Data
 
 		[HideInInspector] public string NodeData;
 
-		public OperationData(OperationType type, string nodeData)
+		protected OperationData(OperationType type, string nodeData)
 		{
 			Type     = type;
 			NodeData = nodeData;

@@ -44,10 +44,13 @@ namespace SceneTransition.Editor.GraphViews
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
 		{
-			if (change.elementsToRemove != null)
-			{
-				var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>();
-			}
+			if (change.elementsToRemove == null)
+				return change;
+
+			var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
+
+			var command = new RemoveNodesCommand(workflowNodes);
+			ExecuteCommand(command);
 
 			return change;
 		}
@@ -160,18 +163,6 @@ namespace SceneTransition.Editor.GraphViews
 			CreateNode<T>(mousePosition);
 		}
 
-		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
-		{
-			var node = new T();
-
-			var command = new AddNodeCommand(node, position);
-			ExecuteCommand(command);
-
-			node.AddManipulator(new NodeSelector(this, node));
-
-			return node;
-		}
-
 		// 定義節點可連接的 Port
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
 		{
@@ -189,6 +180,67 @@ namespace SceneTransition.Editor.GraphViews
 			});
 
 			return compatiblePorts;
+		}
+
+		#endregion
+
+		#region 節點操作
+
+		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
+		{
+			var node = new T();
+
+			var command = new AddNodeCommand(node, position);
+			ExecuteCommand(command);
+
+			node.AddManipulator(new NodeSelector(this, node));
+
+			return node;
+		}
+
+		public List<WorkflowNode> CreateNodes(List<OperationData> operationData)
+		{
+			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
+
+			foreach (var data in operationData)
+			{
+				var nodeData = JsonUtility.FromJson<NodeData>(data.NodeData);
+
+				WorkflowNode node = data.Type switch
+				{
+					OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
+					OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
+					OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
+					OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
+					OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
+					_                             => throw new Exception("未知的操作類型！"),
+				};
+
+				node.SetId(nodeData.Id);
+
+				nodeIdToInstance[nodeData.Id] = node;
+
+				if (node is LoadSceneNode loadSceneNode)
+				{
+					loadSceneNode.SetSceneAssetByLoad((data as LoadSceneOperationData)?.SceneAsset);
+				}
+			}
+
+			foreach (var data in operationData)
+			{
+				var nodeData = JsonUtility.FromJson<NodeData>(data.NodeData);
+
+				if (string.IsNullOrEmpty(nodeData.OutputNodeId)                    ||
+				    !nodeIdToInstance.TryGetValue(nodeData.Id, out var outputNode) ||
+				    !nodeIdToInstance.TryGetValue(nodeData.OutputNodeId, out var inputNode)
+				   )
+					continue;
+
+				var edge = outputNode.Output.ConnectTo(inputNode.Input);
+				AddElement(edge);
+			}
+
+			return nodeIdToInstance.Values.ToList();
 		}
 
 		#endregion
@@ -263,46 +315,7 @@ namespace SceneTransition.Editor.GraphViews
 		public void LoadFromAsset(SceneWorkflowAsset asset)
 		{
 			DeleteElements(graphElements.ToList());
-
-			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
-
-			foreach (var operationData in asset.OperationData)
-			{
-				var nodeData = JsonUtility.FromJson<NodeData>(operationData.NodeData);
-
-				WorkflowNode node = operationData.Type switch
-				{
-					OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
-					OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
-					OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
-					OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
-					OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
-					_                             => throw new Exception("未知的操作類型！"),
-				};
-
-				node.SetId(nodeData.Id);
-
-				nodeIdToInstance[nodeData.Id] = node;
-
-				if (node is LoadSceneNode loadSceneNode)
-				{
-					loadSceneNode.SetSceneAssetByLoad((operationData as LoadSceneOperationData)?.SceneAsset);
-				}
-			}
-
-			foreach (var operationData in asset.OperationData)
-			{
-				var nodeData = JsonUtility.FromJson<NodeData>(operationData.NodeData);
-
-				if (string.IsNullOrEmpty(nodeData.OutputNodeId)                    ||
-				    !nodeIdToInstance.TryGetValue(nodeData.Id, out var outputNode) ||
-				    !nodeIdToInstance.TryGetValue(nodeData.OutputNodeId, out var inputNode)
-				   )
-					continue;
-
-				var edge = outputNode.Output.ConnectTo(inputNode.Input);
-				AddElement(edge);
-			}
+			CreateNodes(asset.OperationData);
 		}
 
 		#endregion

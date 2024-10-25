@@ -12,7 +12,6 @@ namespace SceneTransition.Editor.GraphViews
 		public void RecordCommand(IGraphViewCommand command)
 		{
 			_undoStack.Push(command);
-			_redoStack.Clear();
 		}
 
 		[CanBeNull]
@@ -23,6 +22,9 @@ namespace SceneTransition.Editor.GraphViews
 
 			var command = _undoStack.Pop();
 			_redoStack.Push(command);
+
+			if (_redoStack.Count > 10)
+				_redoStack.Pop();
 
 			return command;
 		}
@@ -35,6 +37,9 @@ namespace SceneTransition.Editor.GraphViews
 
 			var command = _redoStack.Pop();
 			_undoStack.Push(command);
+
+			if (_undoStack.Count > 10)
+				_undoStack.Pop();
 
 			return command;
 		}
