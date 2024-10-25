@@ -13,35 +13,24 @@ MonoBehaviour:
   m_Name: "\u5834\u666F\u8F49\u63DB\u6D41\u7A0B"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 2047251575635443782
-  - rid: 2047251575635443783
-  - rid: 2047251575635443784
-  - rid: 2047251575635443785
+  - rid: 2047251643192573952
+  - rid: 2047251643192573953
+  - rid: 2047251643192573954
   references:
     version: 2
     RefIds:
-    - rid: 2047251575635443782
+    - rid: 2047251643192573952
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
-        NodeData: '{"Id":"b02bf05a-215c-49aa-90ac-dbc921e41ecf","Position":{"x":-2.4000000953674318,"y":214.39999389648438},"InputNodeId":"","OutputNodeId":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a"}'
-    - rid: 2047251575635443783
-      type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+        NodeData: '{"Id":"3c3e334f-239d-41bd-8913-78efa23761a8","Position":{"x":85.5999984741211,"y":302.3999938964844},"InputNodeId":"","OutputNodeId":"6e427f61-430b-4cf4-9b8a-a9f1521c0c42"}'
+    - rid: 2047251643192573953
+      type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
-        Type: 1
-        NodeData: '{"Id":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a","Position":{"x":339.20001220703127,"y":151.20001220703126},"InputNodeId":"b02bf05a-215c-49aa-90ac-dbc921e41ecf","OutputNodeId":"7ccc9b4d-2204-48c8-b357-586c8744c2e4"}'
-    - rid: 2047251575635443784
-      type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
-      data:
-        Type: 0
-        NodeData: '{"Id":"7ccc9b4d-2204-48c8-b357-586c8744c2e4","Position":{"x":636.7999877929688,"y":128.79998779296876},"InputNodeId":"f3539ace-4f3b-4a22-9ede-8f17fa22d84a","OutputNodeId":"617c62bd-04b4-4e61-bd2a-d757b1c05acb"}'
-        SceneAsset:
-          m_AssetGUID: e9665395f820adc469eb0d8e6ca43d68
-          m_SubObjectName: 
-          m_SubObjectType: 
-          m_EditorAssetChanged: 0
-    - rid: 2047251575635443785
+        Type: 3
+        NodeData: '{"Id":"6e427f61-430b-4cf4-9b8a-a9f1521c0c42","Position":{"x":314.3999938964844,"y":264.0},"InputNodeId":"3c3e334f-239d-41bd-8913-78efa23761a8","OutputNodeId":"13125198-e853-47f3-841c-279602434b8d"}'
+    - rid: 2047251643192573954
       type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 4
-        NodeData: '{"Id":"617c62bd-04b4-4e61-bd2a-d757b1c05acb","Position":{"x":1007.2000122070313,"y":199.20001220703126},"InputNodeId":"7ccc9b4d-2204-48c8-b357-586c8744c2e4","OutputNodeId":""}'
+        NodeData: '{"Id":"13125198-e853-47f3-841c-279602434b8d","Position":{"x":625.5999755859375,"y":380.0},"InputNodeId":"6e427f61-430b-4cf4-9b8a-a9f1521c0c42","OutputNodeId":""}'

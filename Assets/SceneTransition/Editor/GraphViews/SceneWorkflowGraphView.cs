@@ -38,7 +38,21 @@ namespace SceneTransition.Editor.GraphViews
 			AddNodeContextMenu();
 
 			RegisterCallback<MouseUpEvent>(OnMouseUp);
+
+			graphViewChanged += OnGraphViewChanged;
 		}
+
+		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
+		{
+			if (change.elementsToRemove != null)
+			{
+				var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>();
+			}
+
+			return change;
+		}
+
+		#region 紀錄位置資訊
 
 		public void StartDragNode(WorkflowNode node)
 		{
@@ -62,6 +76,8 @@ namespace SceneTransition.Editor.GraphViews
 			_draggingNode      = null;
 			_dragStartPosition = null;
 		}
+
+		#endregion
 
 		#region 歷史紀錄與執行
 
@@ -184,44 +200,20 @@ namespace SceneTransition.Editor.GraphViews
 			if (!ValidateSave(out var errorMessage))
 				throw new Exception(errorMessage);
 
-			// 儲存節點資料
-			SaveNodeData();
-
 			// 儲存至 Asset
-			ApplyToAsset(asset);
-		}
-
-		private void SaveNodeData()
-		{
 			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
 
-			foreach (var node in workflowNodes)
-			{
-				node.NodeData.Position = node.GetPosition().position;
-			}
-
-			foreach (var edge in edges)
-			{
-				if (edge.output.node is not WorkflowNode outputNode ||
-				    edge.input.node is not WorkflowNode inputNode)
-					continue;
-
-				outputNode.NodeData.OutputNodeId = inputNode.NodeData.Id;
-				inputNode.NodeData.InputNodeId   = outputNode.NodeData.Id;
-			}
-		}
-
-		private void ApplyToAsset(SceneWorkflowAsset asset)
-		{
-			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
-			var startNode     = workflowNodes.First(node => !node.Input.connected);
+			var startNode = workflowNodes.First(node => !node.Input.connected);
 
 			var currentNode = startNode;
 
 			while (currentNode != null)
 			{
 				asset.AddOperation(currentNode.CreateOperationData());
-				currentNode = workflowNodes.FirstOrDefault(n => n.NodeData.Id == currentNode.NodeData.OutputNodeId);
+
+				currentNode = currentNode.Output.connected
+					? currentNode.Output.connections.First().input.node as WorkflowNode
+					: null;
 			}
 		}
 
@@ -288,7 +280,8 @@ namespace SceneTransition.Editor.GraphViews
 					_                             => throw new Exception("未知的操作類型！"),
 				};
 
-				node.NodeData.Id              = nodeData.Id;
+				node.SetId(nodeData.Id);
+
 				nodeIdToInstance[nodeData.Id] = node;
 
 				if (node is LoadSceneNode loadSceneNode)

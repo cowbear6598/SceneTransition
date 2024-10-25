@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Linq;
+using SceneTransition.Operations;
 using SceneTransition.ScriptableObjects.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public abstract class WorkflowNode : Node
 	{
-		public NodeData NodeData { get; } = new();
-		public Port     Input    { get; }
-		public Port     Output   { get; }
+		public string Id;
+
+		public readonly Port Input;
+		public readonly Port Output;
 
 		protected WorkflowNode(string title)
 		{
-			NodeData.Id = Guid.NewGuid().ToString();
+			Id = Guid.NewGuid().ToString();
 
 			this.title = title;
 
@@ -34,6 +36,33 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			RefreshPorts();
 		}
 
-		public abstract OperationData CreateOperationData();
+		public abstract OperationType OperationType { get; }
+
+		public OperationData CreateOperationData()
+		{
+			var nodeData = new NodeData
+			{
+				Id       = Id,
+				Position = GetPosition().position,
+			};
+
+			if (Input.connected)
+			{
+				var connections = Input.connections.ToList();
+				nodeData.InputNodeId = (connections[0].output.node as WorkflowNode).Id;
+			}
+
+			if (Output.connected)
+			{
+				var connections = Output.connections.ToList();
+				nodeData.OutputNodeId = (connections[0].input.node as WorkflowNode).Id;
+			}
+
+			return MakeOperationData(JsonUtility.ToJson(nodeData));
+		}
+
+		protected abstract OperationData MakeOperationData(string nodeData);
+
+		public void SetId(string Id) => this.Id = Id;
 	}
 }
