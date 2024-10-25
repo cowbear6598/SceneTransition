@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SceneTransition.Editor.GraphViews.Command;
+using SceneTransition.Editor.GraphViews.Manipulators;
 using SceneTransition.Editor.GraphViews.Nodes;
-using SceneTransition.Editor.Windows;
 using SceneTransition.Operations;
 using SceneTransition.ScriptableObjects;
 using SceneTransition.ScriptableObjects.Data;
@@ -15,12 +16,13 @@ namespace SceneTransition.Editor.GraphViews
 {
 	public class SceneWorkflowGraphView : GraphView
 	{
-		private readonly SceneWorkflowEditorWindow _editorWindow;
+		private readonly SceneWorkflowGraphViewHistory _history = new();
 
-		public SceneWorkflowGraphView(SceneWorkflowEditorWindow editorWindow)
+		private Vector2?     _dragStartPosition;
+		private WorkflowNode _draggingNode;
+
+		public SceneWorkflowGraphView()
 		{
-			_editorWindow = editorWindow;
-
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
 			this.AddManipulator(new ContentDragger());
@@ -34,7 +36,54 @@ namespace SceneTransition.Editor.GraphViews
 
 			AddStyles();
 			AddNodeContextMenu();
+
+			RegisterCallback<MouseUpEvent>(OnMouseUp);
 		}
+
+		public void StartDragNode(WorkflowNode node)
+		{
+			_draggingNode      = node;
+			_dragStartPosition = node.GetPosition().position;
+		}
+
+		private void OnMouseUp(MouseUpEvent e)
+		{
+			if (_draggingNode == null)
+				return;
+
+			var currentPosition = _draggingNode.GetPosition().position;
+
+			if (_dragStartPosition == null || _dragStartPosition == currentPosition)
+				return;
+
+			var command = new MoveNodeCommand(_draggingNode, _dragStartPosition.Value, currentPosition);
+			ExecuteCommand(command);
+
+			_draggingNode      = null;
+			_dragStartPosition = null;
+		}
+
+		#region 歷史紀錄與執行
+
+		private void ExecuteCommand(IGraphViewCommand command)
+		{
+			command.Execute(this);
+			_history.RecordCommand(command);
+		}
+
+		public void Undo()
+		{
+			var command = _history.Undo();
+			command?.Undo(this);
+		}
+
+		public void Redo()
+		{
+			var command = _history.Redo();
+			command?.Execute(this);
+		}
+
+		#endregion
 
 		#region 初始化
 
@@ -98,9 +147,11 @@ namespace SceneTransition.Editor.GraphViews
 		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
 		{
 			var node = new T();
-			node.SetPosition(new Rect(position, Vector2.zero));
 
-			AddElement(node);
+			var command = new AddNodeCommand(node, position);
+			ExecuteCommand(command);
+
+			node.AddManipulator(new NodeSelector(this, node));
 
 			return node;
 		}

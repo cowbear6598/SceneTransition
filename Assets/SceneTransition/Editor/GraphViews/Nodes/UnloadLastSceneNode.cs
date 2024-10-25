@@ -6,7 +6,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public class UnloadLastSceneNode : WorkflowNode
 	{
-		public override OperationType OperationType         => OperationType.UnloadLastScene;
+		public virtual  OperationType OperationType         => OperationType.UnloadLastScene;
 		public override OperationData CreateOperationData() => new UnloadLastSceneOperationData(JsonUtility.ToJson(NodeData));
 
 		public UnloadLastSceneNode() : base("移除上一個場景") { }

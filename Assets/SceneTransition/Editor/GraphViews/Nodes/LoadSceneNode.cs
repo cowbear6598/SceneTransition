@@ -68,7 +68,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			_objectField.SetValueWithoutNotify(sceneAsset?.editorAsset);
 		}
 
-		public override OperationType OperationType => OperationType.LoadScene;
+		public virtual OperationType OperationType => OperationType.LoadScene;
 		public override OperationData CreateOperationData() => new LoadSceneOperationData(
 			JsonUtility.ToJson(NodeData),
 			SceneAsset

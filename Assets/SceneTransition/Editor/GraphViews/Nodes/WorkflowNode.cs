@@ -1,31 +1,30 @@
-﻿using SceneTransition.Operations;
+﻿using System;
 using SceneTransition.ScriptableObjects.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public abstract class WorkflowNode : Node
 	{
-		public NodeData NodeData { get; private set; } = new();
-		public Port     Input    { get; private set; }
-		public Port     Output   { get; private set; }
-
-		public abstract OperationType OperationType { get; }
+		public NodeData NodeData { get; } = new();
+		public Port     Input    { get; }
+		public Port     Output   { get; }
 
 		protected WorkflowNode(string title)
 		{
-			NodeData.Id = System.Guid.NewGuid().ToString();
+			NodeData.Id = Guid.NewGuid().ToString();
 
 			this.title = title;
 
 			// 創建輸入端口
-			Input          = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
+			Input          = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
 			Input.portName = "執行";
 			inputContainer.Add(Input);
 
 			// 創建輸出端口
-			Output          = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+			Output          = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
 			Output.portName = "下一步";
 			outputContainer.Add(Output);
 

@@ -24,12 +24,12 @@ namespace SceneTransition.Editor.Windows
 		{
 			CreateToolbar();
 
-			_graphView                = new SceneWorkflowGraphView(this);
+			_graphView                = new SceneWorkflowGraphView();
 			_graphView.style.flexGrow = 1;
 
 			rootVisualElement.Add(_graphView);
 
-			rootVisualElement.RegisterCallback<KeyDownEvent>(OnKeyDown);
+			rootVisualElement.RegisterCallback<KeyDownEvent>(KeyMap);
 		}
 
 		private void OnDisable()
@@ -37,16 +37,16 @@ namespace SceneTransition.Editor.Windows
 			rootVisualElement.Remove(_graphView);
 		}
 
-		#region Toolbar
+		#region 工具列
 
 		private void CreateToolbar()
 		{
 			var toolbar = new Toolbar();
 
-			var loadButton    = new ToolbarButton(() => Load()) { text = "載入" };
-			var saveButton    = new ToolbarButton(Save) { text         = "儲存" };
-			var saveAsButton  = new ToolbarButton(SaveAs) { text       = "另存新檔" };
-			var showAllButton = new ToolbarButton(ShowAll) { text      = "顯示全部" };
+			var loadButton    = new ToolbarButton(() => Load()) { text                = "載入" };
+			var saveButton    = new ToolbarButton(Save) { text                        = "儲存" };
+			var saveAsButton  = new ToolbarButton(SaveAs) { text                      = "另存新檔" };
+			var showAllButton = new ToolbarButton(() => _graphView.FrameAll()) { text = "顯示全部" };
 
 			toolbar.Add(loadButton);
 			toolbar.Add(saveButton);
@@ -58,6 +58,8 @@ namespace SceneTransition.Editor.Windows
 		}
 
 		#endregion
+
+		#region 儲存/載入
 
 		public void Load(SceneWorkflowAsset workflowAsset = null)
 		{
@@ -79,7 +81,9 @@ namespace SceneTransition.Editor.Windows
 				asset = AssetDatabase.LoadAssetAtPath<SceneWorkflowAsset>(path);
 			}
 			else
+			{
 				asset = workflowAsset;
+			}
 
 			_workflowAsset = asset;
 			_graphView.LoadFromAsset(asset);
@@ -128,22 +132,42 @@ namespace SceneTransition.Editor.Windows
 			}
 		}
 
-		private void ShowAll() => _graphView.FrameAll();
+		#endregion
 
-		private void OnKeyDown(KeyDownEvent e)
+		// 快捷鍵設置
+		private void KeyMap(KeyDownEvent e)
 		{
 			if (!e.actionKey)
 				return;
 
 			switch (e.keyCode)
 			{
-				case KeyCode.S:
-					if (e.shiftKey) // 另存新檔
-						SaveAs();
-					else // 儲存
-						Save();
-
+				case KeyCode.Z:
 					e.StopPropagation();
+
+					if (e.shiftKey)
+					{
+						_graphView.Redo();
+					}
+					else
+					{
+						_graphView.Undo();
+					}
+
+					break;
+
+				case KeyCode.S:
+					e.StopPropagation();
+
+					if (e.shiftKey) // 另存新檔
+					{
+						SaveAs();
+					}
+					else // 儲存
+					{
+						Save();
+					}
+
 
 					break;
 			}

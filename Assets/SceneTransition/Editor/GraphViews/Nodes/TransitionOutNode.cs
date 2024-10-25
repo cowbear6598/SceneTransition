@@ -6,7 +6,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public class TransitionOutNode : WorkflowNode
 	{
-		public override OperationType OperationType => OperationType.TransitionOut;
+		public virtual OperationType OperationType => OperationType.TransitionOut;
 		public override OperationData CreateOperationData() => new TransitionOutOperationData(
 			JsonUtility.ToJson(NodeData)
 		);
