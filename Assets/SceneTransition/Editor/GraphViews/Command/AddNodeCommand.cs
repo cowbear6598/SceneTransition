@@ -16,12 +16,16 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Execute(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("AddNodeCommand.Execute");
+
 			_workflowNode.SetPosition(new Rect(_position, Vector2.zero));
 			graphView.AddElement(_workflowNode);
 		}
 
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("AddNodeCommand.Undo");
+
 			graphView.RemoveElement(_workflowNode);
 		}
 	}

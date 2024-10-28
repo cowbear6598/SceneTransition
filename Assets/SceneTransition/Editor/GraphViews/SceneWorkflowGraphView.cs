@@ -44,23 +44,34 @@ namespace SceneTransition.Editor.GraphViews
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
 		{
-			if (change.elementsToRemove == null)
-				return change;
-
-			var edges = change.elementsToRemove.OfType<Edge>().ToList();
-
-			if (edges.Count != 0)
+			// 新增連線
+			if (change.edgesToCreate != null)
 			{
-				var command = new RemoveEdgesCommand(edges);
+				var edgeToCreate = change.edgesToCreate.First();
+
+				var command = new AddEdgeCommand(edgeToCreate);
 				ExecuteCommand(command);
 			}
 
-			var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
-
-			if (workflowNodes.Count != 0)
+			if (change.elementsToRemove != null)
 			{
-				var command = new RemoveNodesCommand(workflowNodes);
-				ExecuteCommand(command);
+				// 移除連線
+				var edgesToRemove = change.elementsToRemove.OfType<Edge>().ToList();
+
+				if (edgesToRemove.Count != 0)
+				{
+					var command = new RemoveEdgesCommand(edgesToRemove);
+					ExecuteCommand(command);
+				}
+
+				// 移除節點
+				var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
+
+				if (workflowNodes.Count != 0)
+				{
+					var command = new RemoveNodesCommand(workflowNodes);
+					ExecuteCommand(command);
+				}
 			}
 
 			return change;
@@ -99,6 +110,8 @@ namespace SceneTransition.Editor.GraphViews
 		{
 			command.Execute(this);
 			_history.RecordCommand(command);
+
+			_history.ClearRedo();
 		}
 
 		public void Undo()
@@ -198,7 +211,6 @@ namespace SceneTransition.Editor.GraphViews
 		#endregion
 
 		#region 節點操作
-
 
 		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
 		{

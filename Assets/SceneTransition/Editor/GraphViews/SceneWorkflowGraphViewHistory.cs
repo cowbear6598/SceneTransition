@@ -43,5 +43,10 @@ namespace SceneTransition.Editor.GraphViews
 
 			return command;
 		}
+
+		public void ClearRedo()
+		{
+			_redoStack.Clear();
+		}
 	}
 }

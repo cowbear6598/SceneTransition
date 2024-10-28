@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: "\u5834\u666F\u8F49\u63DB\u6D41\u7A0B"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 2047251709218258944
-  - rid: 2047251709218258945
+  - rid: 2047251709218258951
+  - rid: 2047251709218258952
   references:
     version: 2
     RefIds:
-    - rid: 2047251709218258944
+    - rid: 2047251709218258951
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
-        NodeData: '{"Id":"ef112e08-45c0-481a-a8ab-588dedea2c4f","Position":{"x":268.79998779296877,"y":269.6000061035156},"InputNodeId":"","OutputNodeId":"b26a9060-1f6b-4474-9d81-f6a52349a70e"}'
-    - rid: 2047251709218258945
+        NodeData: '{"Id":"333dc99f-e729-404c-b01c-4d266be732a0","Position":{"x":231.1999969482422,"y":156.0},"InputNodeId":"","OutputNodeId":"71513b12-1dd7-40fb-a221-242c9c093cc9"}'
+    - rid: 2047251709218258952
       type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 4
-        NodeData: '{"Id":"b26a9060-1f6b-4474-9d81-f6a52349a70e","Position":{"x":635.2000122070313,"y":288.0},"InputNodeId":"ef112e08-45c0-481a-a8ab-588dedea2c4f","OutputNodeId":""}'
+        NodeData: '{"Id":"71513b12-1dd7-40fb-a221-242c9c093cc9","Position":{"x":594.4000244140625,"y":367.20001220703127},"InputNodeId":"333dc99f-e729-404c-b01c-4d266be732a0","OutputNodeId":""}'

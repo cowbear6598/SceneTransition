@@ -18,10 +18,14 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Execute(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("MoveNodeCommand.Execute");
+
 			_node.SetPosition(new Rect(_newPosition, Vector2.zero));
 		}
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("MoveNodeCommand.Undo");
+
 			_node.SetPosition(new Rect(_oldPosition, Vector2.zero));
 		}
 	}

@@ -9,12 +9,12 @@ namespace SceneTransition.Editor.GraphViews.Command
 {
 	public class RemoveEdgesCommand : IGraphViewCommand
 	{
-		private readonly List<Edge>           _edges;
-		private readonly List<ConnectionData> _connectionData;
+		private readonly List<Edge>               _edges;
+		private readonly List<EdgeConnectionData> _connectionData;
 
 		public RemoveEdgesCommand(List<Edge> edges)
 		{
-			_connectionData = new List<ConnectionData>();
+			_connectionData = new List<EdgeConnectionData>();
 
 			_edges = edges;
 
@@ -23,7 +23,7 @@ namespace SceneTransition.Editor.GraphViews.Command
 				var inputNodeId  = (edge.input.node as WorkflowNode)?.Id;
 				var outputNodeId = (edge.output.node as WorkflowNode)?.Id;
 
-				_connectionData.Add(new ConnectionData
+				_connectionData.Add(new EdgeConnectionData
 				{
 					InputId  = inputNodeId,
 					OutputId = outputNodeId,
@@ -33,6 +33,8 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Execute(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("RemoveEdgesCommand.Execute");
+
 			foreach (var edge in _edges)
 			{
 				edge.input.Disconnect(edge);
@@ -44,6 +46,8 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
+			Debug.Log("RemoveEdgesCommand.Undo");
+
 			for (var i = 0; i < _edges.Count; i++)
 			{
 				var nodes = graphView.Query<WorkflowNode>().ToList();
@@ -61,12 +65,6 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 				graphView.AddElement(_edges[i]);
 			}
-		}
-
-		private struct ConnectionData
-		{
-			public string InputId;
-			public string OutputId;
 		}
 	}
 }
