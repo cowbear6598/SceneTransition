@@ -38,7 +38,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public OperationData CreateOperationData()
 		{
-			var nodeData1 = new NodeData
+			var nodeData = new NodeData
 			{
 				Id       = Id,
 				Position = GetPosition().position,
@@ -47,16 +47,14 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			if (Input.connected)
 			{
 				var connections = Input.connections.ToList();
-				nodeData1.InputNodeId = (connections[0].output.node as WorkflowNode).Id;
+				nodeData.InputNodeId = (connections[0].output.node as WorkflowNode).Id;
 			}
 
 			if (Output.connected)
 			{
 				var connections = Output.connections.ToList();
-				nodeData1.OutputNodeId = (connections[0].input.node as WorkflowNode).Id;
+				nodeData.OutputNodeId = (connections[0].input.node as WorkflowNode).Id;
 			}
-
-			var nodeData = nodeData1;
 
 			return MakeOperationData(JsonUtility.ToJson(nodeData));
 		}

@@ -22,20 +22,20 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				style             = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
 			};
 
-			_objectField.RegisterValueChangedCallback(evt =>
+			_objectField.RegisterValueChangedCallback(e =>
 			{
-				if (evt.newValue == null)
+				if (e.newValue == null)
 				{
 					SceneAsset = null;
 
 					return;
 				}
 
-				var assetPath = AssetDatabase.GetAssetPath(evt.newValue);
+				var assetPath = AssetDatabase.GetAssetPath(e.newValue);
 
 				if (!assetPath.EndsWith(".unity"))
 				{
-					Debug.LogError($"{evt.newValue.name} 不是場景。");
+					Debug.LogError($"{e.newValue.name} 不是場景。");
 
 					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
@@ -51,7 +51,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				}
 				else
 				{
-					Debug.LogError($"場景資源 '{evt.newValue.name}' 不在 Addressable 資源中");
+					Debug.LogError($"場景資源 '{e.newValue.name}' 不在 Addressable 資源中");
 					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
 				}

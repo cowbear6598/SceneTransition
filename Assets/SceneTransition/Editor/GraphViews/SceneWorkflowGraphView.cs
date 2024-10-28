@@ -47,10 +47,21 @@ namespace SceneTransition.Editor.GraphViews
 			if (change.elementsToRemove == null)
 				return change;
 
+			var edges = change.elementsToRemove.OfType<Edge>().ToList();
+
+			if (edges.Count != 0)
+			{
+				var command = new RemoveEdgesCommand(edges);
+				ExecuteCommand(command);
+			}
+
 			var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
 
-			var command = new RemoveNodesCommand(workflowNodes);
-			ExecuteCommand(command);
+			if (workflowNodes.Count != 0)
+			{
+				var command = new RemoveNodesCommand(workflowNodes);
+				ExecuteCommand(command);
+			}
 
 			return change;
 		}
@@ -93,12 +104,14 @@ namespace SceneTransition.Editor.GraphViews
 		public void Undo()
 		{
 			var command = _history.Undo();
+
 			command?.Undo(this);
 		}
 
 		public void Redo()
 		{
 			var command = _history.Redo();
+
 			command?.Execute(this);
 		}
 
@@ -186,6 +199,7 @@ namespace SceneTransition.Editor.GraphViews
 
 		#region 節點操作
 
+
 		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
 		{
 			var node = new T();
@@ -198,7 +212,7 @@ namespace SceneTransition.Editor.GraphViews
 			return node;
 		}
 
-		public List<WorkflowNode> CreateNodes(List<OperationData> operationData)
+		private void CreateNodes(List<OperationData> operationData)
 		{
 			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
 
@@ -239,8 +253,6 @@ namespace SceneTransition.Editor.GraphViews
 				var edge = outputNode.Output.ConnectTo(inputNode.Input);
 				AddElement(edge);
 			}
-
-			return nodeIdToInstance.Values.ToList();
 		}
 
 		#endregion
