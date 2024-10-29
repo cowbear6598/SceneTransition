@@ -110,7 +110,6 @@ namespace SceneTransition.Editor.GraphViews
 		{
 			command.Execute(this);
 			_history.RecordCommand(command);
-
 			_history.ClearRedo();
 		}
 

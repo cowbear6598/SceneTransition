@@ -8,7 +8,7 @@ namespace SceneTransition.Editor.GraphViews
 {
 	public class SceneWorkflowGraphViewHistory
 	{
-		private const int MAX_OPERATIONS = 10;
+		private const int MAX_OPERATIONS = 20;
 
 		private readonly LinkedList<IGraphViewCommand> _undoList = new();
 		private readonly LinkedList<IGraphViewCommand> _redoList = new();
@@ -18,7 +18,7 @@ namespace SceneTransition.Editor.GraphViews
 			_undoList.AddLast(command);
 
 			if (_undoList.Count > MAX_OPERATIONS)
-				_undoList.RemoveFirst(); // 移除最舊的
+				_undoList.RemoveFirst();
 		}
 
 		[CanBeNull]
