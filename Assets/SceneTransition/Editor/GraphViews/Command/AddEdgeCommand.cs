@@ -8,16 +8,14 @@ namespace SceneTransition.Editor.GraphViews.Command
 {
 	public class AddEdgeCommand : IGraphViewCommand
 	{
-		private Edge _edge;
+		private bool _isInitialized = true;
 
 		private readonly EdgeConnectionData _connectionData;
 
 		public AddEdgeCommand(Edge edge)
 		{
-			_edge = edge;
-
-			var inputNodeId  = (_edge.input.node as WorkflowNode).Id;
-			var outputNodeId = (_edge.output.node as WorkflowNode).Id;
+			var inputNodeId  = (edge.input.node as WorkflowNode).Id;
+			var outputNodeId = (edge.output.node as WorkflowNode).Id;
 
 			_connectionData = new EdgeConnectionData
 			{
@@ -30,9 +28,9 @@ namespace SceneTransition.Editor.GraphViews.Command
 		{
 			Debug.Log("AddEdgeCommand.Execute");
 
-			if (_edge != null)
+			if (_isInitialized)
 			{
-				Debug.LogWarning("Edge already exists");
+				_isInitialized = false;
 				return;
 			}
 
@@ -41,24 +39,54 @@ namespace SceneTransition.Editor.GraphViews.Command
 			var inputNode  = workflowNodes.FirstOrDefault(node => node.Id == _connectionData.InputId);
 			var outputNode = workflowNodes.FirstOrDefault(node => node.Id == _connectionData.OutputId);
 
+			var edges = graphView.Query<Edge>().ToList();
+
+			var edge = edges.FirstOrDefault(e =>
+			{
+				var inputId  = (e.input.node as WorkflowNode).Id;
+				var outputId = (e.output.node as WorkflowNode).Id;
+
+				return inputId == _connectionData.InputId && outputId == _connectionData.OutputId;
+			});
+
+			if (edge != null)
+			{
+				edge.input.DisconnectAll();
+				edge.output.DisconnectAll();
+
+				graphView.RemoveElement(edge);
+			}
+
 			if (inputNode == null || outputNode == null)
 				return;
 
-			_edge = inputNode.Input.ConnectTo(outputNode.Output);
+			var newEdge = inputNode.Input.ConnectTo(outputNode.Output);
 
-			graphView.AddElement(_edge);
+			graphView.AddElement(newEdge);
 		}
 
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
 			Debug.Log("AddEdgeCommand.Undo");
 
-			_edge.input?.DisconnectAll();
-			_edge.output?.DisconnectAll();
+			var edges = graphView.Query<Edge>().ToList();
 
-			graphView.RemoveElement(_edge);
+			var edge = edges.FirstOrDefault(e =>
+			{
+				var inputId  = (e.input.node as WorkflowNode).Id;
+				var outputId = (e.output.node as WorkflowNode).Id;
 
-			_edge = null;
+				Debug.Log(inputId + " " + outputId + " " + _connectionData.InputId + " " + _connectionData.OutputId);
+
+				return inputId == _connectionData.InputId && outputId == _connectionData.OutputId;
+			});
+
+			if (edge != null)
+			{
+				edge.input.DisconnectAll();
+				edge.output.DisconnectAll();
+				graphView.RemoveElement(edge);
+			}
 		}
 	}
 }

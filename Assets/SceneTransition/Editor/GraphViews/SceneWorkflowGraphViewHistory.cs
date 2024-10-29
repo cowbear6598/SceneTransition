@@ -1,30 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using SceneTransition.Editor.GraphViews.Command;
+using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews
 {
 	public class SceneWorkflowGraphViewHistory
 	{
-		private readonly Stack<IGraphViewCommand> _undoStack = new();
-		private readonly Stack<IGraphViewCommand> _redoStack = new();
+		private const int MAX_OPERATIONS = 10;
+
+		private readonly LinkedList<IGraphViewCommand> _undoList = new();
+		private readonly LinkedList<IGraphViewCommand> _redoList = new();
 
 		public void RecordCommand(IGraphViewCommand command)
 		{
-			_undoStack.Push(command);
+			_undoList.AddLast(command);
+
+			if (_undoList.Count > MAX_OPERATIONS)
+				_undoList.RemoveFirst(); // 移除最舊的
 		}
 
 		[CanBeNull]
 		public IGraphViewCommand Undo()
 		{
-			if (_undoStack.Count == 0)
+			if (_undoList.Count == 0)
 				return null;
 
-			var command = _undoStack.Pop();
-			_redoStack.Push(command);
+			var command = _undoList.Last.Value;
+			_undoList.RemoveLast();
+			_redoList.AddLast(command);
 
-			if (_redoStack.Count > 10)
-				_redoStack.Pop();
+			if (_redoList.Count > MAX_OPERATIONS)
+				_redoList.RemoveFirst();
 
 			return command;
 		}
@@ -32,21 +40,22 @@ namespace SceneTransition.Editor.GraphViews
 		[CanBeNull]
 		public IGraphViewCommand Redo()
 		{
-			if (_redoStack.Count == 0)
+			if (_redoList.Count == 0)
 				return null;
 
-			var command = _redoStack.Pop();
-			_undoStack.Push(command);
+			var command = _redoList.Last.Value;
+			_redoList.RemoveLast();
+			_undoList.AddLast(command);
 
-			if (_undoStack.Count > 10)
-				_undoStack.Pop();
+			if (_undoList.Count > MAX_OPERATIONS)
+				_undoList.RemoveFirst();
 
 			return command;
 		}
 
 		public void ClearRedo()
 		{
-			_redoStack.Clear();
+			_redoList.Clear();
 		}
 	}
 }
