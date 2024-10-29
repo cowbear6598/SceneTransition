@@ -50,8 +50,6 @@ namespace SceneTransition.Editor.GraphViews
 
 				var command = new MoveNodeCommand(nodesToMove, oldPositions, newPositions);
 				ExecuteCommand(command);
-
-
 			}
 
 			// 新增連線
@@ -132,6 +130,8 @@ namespace SceneTransition.Editor.GraphViews
 		{
 			var manipulator = new ContextualMenuManipulator(menuEvent =>
 			{
+				menuEvent.menu.ClearItems();
+
 				menuEvent.menu.AppendAction(
 					"新增/讀取場景",
 					DropdownCreateNode<LoadSceneNode>
