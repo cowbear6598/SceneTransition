@@ -307,15 +307,7 @@ namespace SceneTransition.Editor.GraphViews
 				return false;
 			}
 
-			// 檢查讀取場景有沒有放入場景資源
-			if (nodes.OfType<LoadSceneNode>().Any(n => n.SceneAsset == null))
-			{
-				errorMessage = "有 LoadScene 節點未設置場景資源！";
-
-				return false;
-			}
-
-			return true;
+			return nodes.All(node => node.IsValidateToSave());
 		}
 
 		public void LoadFromAsset(SceneWorkflowAsset asset)

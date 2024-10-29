@@ -1,20 +1,19 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using SceneTransition.Transition;
+using Object = UnityEngine.Object;
 
 namespace SceneTransition.Operations
 {
 	public class TransitionInOperation : IOperation
 	{
-		private readonly ISceneTransition transition;
+		private readonly SceneTransitionBehaviour transitionPrefab;
 
-		public TransitionInOperation(ISceneTransition transition) =>
-			this.transition = transition;
+		public TransitionInOperation(SceneTransitionBehaviour transitionPrefab) =>
+			this.transitionPrefab = transitionPrefab;
 
 		public UniTask Execute()
 		{
-			if (transition == null)
-				throw new InvalidOperationException("沒有指定 ISceneTransition 實例。");
+			var transition = Object.Instantiate(transitionPrefab);
 
 			return transition.TransitionIn();
 		}

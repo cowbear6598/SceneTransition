@@ -35,7 +35,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 				if (!assetPath.EndsWith(".unity"))
 				{
-					Debug.LogError($"{e.newValue.name} 不是場景。");
+					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是場景資源", "確定");
 
 					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
@@ -51,7 +51,8 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				}
 				else
 				{
-					Debug.LogError($"場景資源 '{e.newValue.name}' 不在 Addressable 資源中");
+					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不在 Addressable 中", "確定");
+
 					_objectField.SetValueWithoutNotify(null);
 					SceneAsset = null;
 				}
@@ -69,5 +70,15 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		protected override OperationData MakeOperationData(string nodeData)
 			=> new LoadSceneOperationData(nodeData, SceneAsset);
+
+		public override bool IsValidateToSave()
+		{
+			var isValidate = SceneAsset != null;
+
+			if (!isValidate)
+				EditorUtility.DisplayDialog("錯誤", "請選擇場景資源", "確定");
+
+			return isValidate;
+		}
 	}
 }

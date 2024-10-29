@@ -1,14 +1,67 @@
 ﻿using SceneTransition.ScriptableObjects.Data;
-using UnityEngine;
+using SceneTransition.Transition;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public class TransitionInNode : WorkflowNode
 	{
-		public GameObject TransitionPrefab;
+		public SceneTransitionBehaviour TransitionPrefab { get; private set; }
 
-		public TransitionInNode() : base("轉場進入") { }
+		private readonly ObjectField _objectField;
 
-		protected override OperationData MakeOperationData(string nodeData) => new TransitionInOperationData(nodeData);
+		public TransitionInNode() : base("轉場進入")
+		{
+			_objectField = new ObjectField("轉換物件")
+			{
+				objectType        = typeof(SceneTransitionBehaviour),
+				allowSceneObjects = false,
+				style             = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
+			};
+
+			_objectField.RegisterValueChangedCallback(e =>
+			{
+				if (e.newValue == null)
+				{
+					TransitionPrefab = null;
+
+					return;
+				}
+
+				var assetPath = AssetDatabase.GetAssetPath(e.newValue);
+
+				if (assetPath.EndsWith(".prefab"))
+					return;
+
+				EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是 Prefab。", "確定");
+
+				_objectField.SetValueWithoutNotify(null);
+				TransitionPrefab = null;
+			});
+
+			mainContainer.Add(_objectField);
+		}
+
+		public void SetPrefabAssetByLoad(SceneTransitionBehaviour prefab)
+		{
+			TransitionPrefab = prefab;
+
+			_objectField.SetValueWithoutNotify(prefab);
+		}
+
+		protected override OperationData MakeOperationData(string nodeData)
+			=> new TransitionInOperationData(nodeData, TransitionPrefab);
+
+		public override bool IsValidateToSave()
+		{
+			var isValidate = TransitionPrefab != null;
+
+			if (!isValidate)
+				EditorUtility.DisplayDialog("錯誤", "請選擇轉場物件", "確定");
+
+			return isValidate;
+		}
 	}
 }

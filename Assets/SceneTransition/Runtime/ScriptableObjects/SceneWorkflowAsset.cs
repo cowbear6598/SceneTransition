@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using SceneTransition.ScriptableObjects.Data;
-using SceneTransition.Transition;
 using UnityEngine;
 
 namespace SceneTransition.ScriptableObjects
@@ -11,9 +10,9 @@ namespace SceneTransition.ScriptableObjects
 	{
 		[SerializeReference] private List<OperationData> _operationData = new();
 
-		public async UniTask Execute(ISceneTransition transition = null)
+		public async UniTask Execute()
 		{
-			var workflow = new SceneWorkflow(transition);
+			var workflow = new SceneWorkflow();
 
 			foreach (var data in _operationData)
 			{

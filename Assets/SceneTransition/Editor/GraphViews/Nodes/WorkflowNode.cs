@@ -68,5 +68,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		protected abstract OperationData MakeOperationData(string nodeData);
 
 		public void SetId(string Id) => this.Id = Id;
+
+		public virtual bool IsValidateToSave() => true;
 	}
 }

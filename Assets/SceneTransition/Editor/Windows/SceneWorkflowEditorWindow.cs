@@ -134,7 +134,8 @@ namespace SceneTransition.Editor.Windows
 
 		#endregion
 
-		// 快捷鍵設置
+		#region 快捷鍵
+
 		private void KeyMap(KeyDownEvent e)
 		{
 			if (!e.actionKey)
@@ -143,34 +144,42 @@ namespace SceneTransition.Editor.Windows
 			switch (e.keyCode)
 			{
 				case KeyCode.Z:
-					e.StopPropagation();
-
-					if (e.shiftKey)
-					{
-						_graphView.Redo();
-					}
-					else
-					{
-						_graphView.Undo();
-					}
-
+					RedoUndoKeyMap(e);
 					break;
 
 				case KeyCode.S:
-					e.StopPropagation();
-
-					if (e.shiftKey) // 另存新檔
-					{
-						SaveAs();
-					}
-					else // 儲存
-					{
-						Save();
-					}
-
-
+					SaveKeyMap(e);
 					break;
 			}
 		}
+		private void SaveKeyMap(KeyDownEvent e)
+		{
+			e.StopPropagation();
+
+			if (e.shiftKey) // 另存新檔
+			{
+				SaveAs();
+			}
+			else // 儲存
+			{
+				Save();
+			}
+		}
+
+		private void RedoUndoKeyMap(KeyDownEvent e)
+		{
+			e.StopPropagation();
+
+			if (e.shiftKey)
+			{
+				_graphView.Redo();
+			}
+			else
+			{
+				_graphView.Undo();
+			}
+		}
+
+		#endregion
 	}
 }
