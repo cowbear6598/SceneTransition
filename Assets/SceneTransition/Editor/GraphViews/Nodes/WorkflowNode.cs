@@ -9,7 +9,8 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	public abstract class WorkflowNode : Node
 	{
-		public string Id;
+		public string  Id       { get; private set; }
+		public Vector2 Position { get; private set; }
 
 		public readonly Port Input;
 		public readonly Port Output;
@@ -34,6 +35,11 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			AddToClassList("scene-workflow-node");
 			RefreshExpandedState();
 			RefreshPorts();
+		}
+
+		public void UpdatePosition(Vector2 position)
+		{
+			Position = position;
 		}
 
 		public OperationData CreateOperationData()

@@ -15,8 +15,6 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Execute(SceneWorkflowGraphView graphView)
 		{
-			Debug.Log("RemoveNodesCommand.Execute");
-
 			foreach (var node in _nodes)
 			{
 				graphView.RemoveElement(node);
@@ -25,8 +23,6 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
-			Debug.Log("RemoveNodesCommand.Undo");
-
 			foreach (var node in _nodes)
 			{
 				graphView.AddElement(node);

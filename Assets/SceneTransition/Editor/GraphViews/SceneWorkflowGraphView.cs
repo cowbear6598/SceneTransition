@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SceneTransition.Editor.GraphViews.Command;
-using SceneTransition.Editor.GraphViews.Manipulators;
 using SceneTransition.Editor.GraphViews.Nodes;
 using SceneTransition.Operations;
 using SceneTransition.ScriptableObjects;
@@ -37,13 +36,24 @@ namespace SceneTransition.Editor.GraphViews
 			AddStyles();
 			AddNodeContextMenu();
 
-			RegisterCallback<MouseUpEvent>(OnMouseUp);
-
 			graphViewChanged += OnGraphViewChanged;
 		}
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
 		{
+			if (change.movedElements != null)
+			{
+				var nodesToMove = change.movedElements.OfType<WorkflowNode>().ToList();
+
+				var oldPositions = nodesToMove.Select(node => node.Position).ToList();
+				var newPositions = nodesToMove.Select(node => node.GetPosition().position).ToList();
+
+				var command = new MoveNodeCommand(nodesToMove, oldPositions, newPositions);
+				ExecuteCommand(command);
+
+
+			}
+
 			// 新增連線
 			if (change.edgesToCreate != null)
 			{
@@ -76,33 +86,6 @@ namespace SceneTransition.Editor.GraphViews
 
 			return change;
 		}
-
-		#region 紀錄位置資訊
-
-		public void StartDragNode(WorkflowNode node)
-		{
-			_draggingNode      = node;
-			_dragStartPosition = node.GetPosition().position;
-		}
-
-		private void OnMouseUp(MouseUpEvent e)
-		{
-			if (_draggingNode == null)
-				return;
-
-			var currentPosition = _draggingNode.GetPosition().position;
-
-			if (_dragStartPosition == null || _dragStartPosition == currentPosition)
-				return;
-
-			var command = new MoveNodeCommand(_draggingNode, _dragStartPosition.Value, currentPosition);
-			ExecuteCommand(command);
-
-			_draggingNode      = null;
-			_dragStartPosition = null;
-		}
-
-		#endregion
 
 		#region 歷史紀錄與執行
 
@@ -218,7 +201,7 @@ namespace SceneTransition.Editor.GraphViews
 			var command = new AddNodeCommand(node, position);
 			ExecuteCommand(command);
 
-			node.AddManipulator(new NodeSelector(this, node));
+			node.UpdatePosition(position);
 
 			return node;
 		}

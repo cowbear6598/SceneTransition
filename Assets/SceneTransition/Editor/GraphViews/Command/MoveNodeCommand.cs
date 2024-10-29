@@ -1,15 +1,16 @@
-﻿using SceneTransition.Editor.GraphViews.Nodes;
+﻿using System.Collections.Generic;
+using SceneTransition.Editor.GraphViews.Nodes;
 using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
 	public class MoveNodeCommand : IGraphViewCommand
 	{
-		private readonly WorkflowNode _node;
-		private readonly Vector2      _oldPosition;
-		private readonly Vector2      _newPosition;
+		private readonly List<WorkflowNode> _node;
+		private readonly List<Vector2>      _oldPosition;
+		private readonly List<Vector2>      _newPosition;
 
-		public MoveNodeCommand(WorkflowNode node, Vector2 oldPosition, Vector2 newPosition)
+		public MoveNodeCommand(List<WorkflowNode> node, List<Vector2> oldPosition, List<Vector2> newPosition)
 		{
 			_node        = node;
 			_oldPosition = oldPosition;
@@ -18,15 +19,19 @@ namespace SceneTransition.Editor.GraphViews.Command
 
 		public void Execute(SceneWorkflowGraphView graphView)
 		{
-			Debug.Log("MoveNodeCommand.Execute");
-
-			_node.SetPosition(new Rect(_newPosition, Vector2.zero));
+			for (var i = 0; i < _node.Count; i++)
+			{
+				_node[i].SetPosition(new Rect(_newPosition[i], Vector2.zero));
+				_node[i].UpdatePosition(_newPosition[i]);
+			}
 		}
 		public void Undo(SceneWorkflowGraphView graphView)
 		{
-			Debug.Log("MoveNodeCommand.Undo");
-
-			_node.SetPosition(new Rect(_oldPosition, Vector2.zero));
+			for (var i = 0; i < _node.Count; i++)
+			{
+				_node[i].SetPosition(new Rect(_oldPosition[i], Vector2.zero));
+				_node[i].UpdatePosition(_oldPosition[i]);
+			}
 		}
 	}
 }
