@@ -61,15 +61,17 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_objectField);
 		}
 
-		public void SetSceneAssetByLoad(AssetReference sceneAsset)
-		{
-			SceneAsset = sceneAsset;
-
-			_objectField.SetValueWithoutNotify(sceneAsset?.editorAsset);
-		}
-
 		protected override OperationData MakeOperationData(string nodeData)
 			=> new LoadSceneOperationData(nodeData, SceneAsset);
+
+		public override void LoadFromData(OperationData operationData)
+		{
+			var data = operationData as LoadSceneOperationData;
+
+			SceneAsset = data.SceneAsset;
+
+			_objectField.SetValueWithoutNotify(SceneAsset?.editorAsset);
+		}
 
 		public override bool IsValidateToSave()
 		{

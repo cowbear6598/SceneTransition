@@ -224,32 +224,23 @@ namespace SceneTransition.Editor.GraphViews
 					_                             => throw new Exception("未知的操作類型！"),
 				};
 
-				node.SetId(nodeData.Id);
-
 				nodeIdToInstance[nodeData.Id] = node;
 
-				if (node is LoadSceneNode loadSceneNode)
-				{
-					loadSceneNode.SetSceneAssetByLoad((data as LoadSceneOperationData)?.SceneAsset);
-				}
-
-				if (node is TransitionInNode transitionInNode)
-				{
-					transitionInNode.SetPrefabAssetByLoad((data as TransitionInOperationData)?.TransitionPrefab);
-				}
+				node.SetId(nodeData.Id);
+				node.LoadFromData(data);
 			}
 
 			foreach (var data in operationData)
 			{
 				var nodeData = JsonUtility.FromJson<NodeData>(data.NodeData);
 
-				if (string.IsNullOrEmpty(nodeData.OutputNodeId)                    ||
-				    !nodeIdToInstance.TryGetValue(nodeData.Id, out var outputNode) ||
-				    !nodeIdToInstance.TryGetValue(nodeData.OutputNodeId, out var inputNode)
-				   )
+				if (string.IsNullOrEmpty(nodeData.OutputNodeId))
 					continue;
 
-				var edge = outputNode.Output.ConnectTo(inputNode.Input);
+				var inputNode  = nodeIdToInstance[nodeData.Id];
+				var outputNode = nodeIdToInstance[nodeData.OutputNodeId];
+
+				var edge = inputNode.Output.ConnectTo(outputNode.Input);
 				AddElement(edge);
 			}
 		}

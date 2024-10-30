@@ -47,15 +47,17 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_objectField);
 		}
 
-		public void SetPrefabAssetByLoad(SceneTransitionBehaviour prefab)
-		{
-			TransitionPrefab = prefab;
-
-			_objectField.SetValueWithoutNotify(prefab);
-		}
-
 		protected override OperationData MakeOperationData(string nodeData)
 			=> new TransitionInOperationData(nodeData, TransitionPrefab);
+
+		public override void LoadFromData(OperationData operationData)
+		{
+			var data = operationData as TransitionInOperationData;
+
+			TransitionPrefab = data.TransitionPrefab;
+
+			_objectField.SetValueWithoutNotify(TransitionPrefab);
+		}
 
 		public override bool IsValidateToSave()
 		{

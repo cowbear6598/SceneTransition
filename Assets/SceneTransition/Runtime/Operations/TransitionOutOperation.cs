@@ -7,14 +7,16 @@ namespace SceneTransition.Operations
 {
 	public class TransitionOutOperation : IOperation
 	{
-		public UniTask Execute()
+		public async UniTask Execute()
 		{
 			var transition = Object.FindFirstObjectByType<SceneTransitionBehaviour>();
 
 			if (transition == null)
 				throw new InvalidOperationException("沒有指定 ISceneTransition 實例。");
 
-			return transition.TransitionOut();
+			await transition.TransitionOut();
+
+			Object.Destroy(transition.gameObject);
 		}
 	}
 }

@@ -69,6 +69,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public void SetId(string Id) => this.Id = Id;
 
-		public virtual bool IsValidateToSave() => true;
+		public virtual bool IsValidateToSave()                        => true;
+		public virtual void LoadFromData(OperationData operationData) { }
 	}
 }
