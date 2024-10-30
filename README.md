@@ -26,3 +26,5 @@ https://github.com/cowbear6598/SceneTransition.git?path=Assets/SceneTransition
 - 建好的 Asset 丟進程式碼並呼叫 Execute 即可跑流程
 
 # 範例
+
+![](https://github.com/cowbear6598/SceneTransition/blob/main/Documents/Example.gif)
