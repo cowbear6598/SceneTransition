@@ -13,35 +13,13 @@ MonoBehaviour:
   m_Name: "\u5834\u666F\u8F49\u63DB\u6D41\u7A0B"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 2047251709218258953
-  - rid: 2047251709218258954
-  - rid: 2047251709218258955
-  - rid: 2047251709218258956
+  - rid: 2047251709218258958
   references:
     version: 2
     RefIds:
-    - rid: 2047251709218258953
+    - rid: 2047251709218258958
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
-        NodeData: '{"Id":"0a7d41ec-686f-40be-92f5-dfcf1d81bb53","Position":{"x":96.80000305175781,"y":271.20001220703127},"InputNodeId":"","OutputNodeId":"d06736b5-28ca-4183-9b8b-4923ee2a2472"}'
-    - rid: 2047251709218258954
-      type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
-      data:
-        Type: 1
-        NodeData: '{"Id":"d06736b5-28ca-4183-9b8b-4923ee2a2472","Position":{"x":378.3999938964844,"y":271.20001220703127},"InputNodeId":"0a7d41ec-686f-40be-92f5-dfcf1d81bb53","OutputNodeId":"98fa786c-484b-44b5-8d0e-fd29cebee695"}'
-    - rid: 2047251709218258955
-      type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
-      data:
-        Type: 0
-        NodeData: '{"Id":"98fa786c-484b-44b5-8d0e-fd29cebee695","Position":{"x":658.4000244140625,"y":271.20001220703127},"InputNodeId":"d06736b5-28ca-4183-9b8b-4923ee2a2472","OutputNodeId":"f46372fc-acd0-4622-b0cf-431f58074ea4"}'
-        SceneAsset:
-          m_AssetGUID: e9665395f820adc469eb0d8e6ca43d68
-          m_SubObjectName: 
-          m_SubObjectType: 
-          m_EditorAssetChanged: 0
-    - rid: 2047251709218258956
-      type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
-      data:
-        Type: 4
-        NodeData: '{"Id":"f46372fc-acd0-4622-b0cf-431f58074ea4","Position":{"x":1007.2000122070313,"y":271.20001220703127},"InputNodeId":"98fa786c-484b-44b5-8d0e-fd29cebee695","OutputNodeId":""}'
+        NodeData: '{"Id":"70505b6c-cede-4968-9624-b501c36f7a48","Position":{"x":152.8000030517578,"y":135.20001220703126},"InputNodeId":"","OutputNodeId":""}'
+        TransitionPrefab: {fileID: 4844962037871926762, guid: 8099b3d0b7a0532449dffb42a30d3ee8, type: 3}

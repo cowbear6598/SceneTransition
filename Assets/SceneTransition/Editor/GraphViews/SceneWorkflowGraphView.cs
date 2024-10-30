@@ -232,6 +232,11 @@ namespace SceneTransition.Editor.GraphViews
 				{
 					loadSceneNode.SetSceneAssetByLoad((data as LoadSceneOperationData)?.SceneAsset);
 				}
+
+				if (node is TransitionInNode transitionInNode)
+				{
+					transitionInNode.SetPrefabAssetByLoad((data as TransitionInOperationData)?.TransitionPrefab);
+				}
 			}
 
 			foreach (var data in operationData)

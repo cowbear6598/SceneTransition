@@ -2,6 +2,7 @@
 using SceneTransition.Transition;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
@@ -31,6 +32,8 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				}
 
 				var assetPath = AssetDatabase.GetAssetPath(e.newValue);
+
+				TransitionPrefab = e.newValue as SceneTransitionBehaviour;
 
 				if (assetPath.EndsWith(".prefab"))
 					return;
