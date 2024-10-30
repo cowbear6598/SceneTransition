@@ -39,51 +39,72 @@ namespace SceneTransition.Editor.GraphViews
 			graphViewChanged += OnGraphViewChanged;
 		}
 
+		#region UI 操作紀錄
+
 		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
 		{
-			if (change.movedElements != null)
-			{
-				var nodesToMove = change.movedElements.OfType<WorkflowNode>().ToList();
-
-				var oldPositions = nodesToMove.Select(node => node.Position).ToList();
-				var newPositions = nodesToMove.Select(node => node.GetPosition().position).ToList();
-
-				var command = new MoveNodeCommand(nodesToMove, oldPositions, newPositions);
-				ExecuteCommand(command);
-			}
-
-			// 新增連線
-			if (change.edgesToCreate != null)
-			{
-				var edgeToCreate = change.edgesToCreate.First();
-
-				var command = new AddEdgeCommand(edgeToCreate);
-				ExecuteCommand(command);
-			}
-
-			if (change.elementsToRemove != null)
-			{
-				// 移除連線
-				var edgesToRemove = change.elementsToRemove.OfType<Edge>().ToList();
-
-				if (edgesToRemove.Count != 0)
-				{
-					var command = new RemoveEdgesCommand(edgesToRemove);
-					ExecuteCommand(command);
-				}
-
-				// 移除節點
-				var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
-
-				if (workflowNodes.Count != 0)
-				{
-					var command = new RemoveNodesCommand(workflowNodes);
-					ExecuteCommand(command);
-				}
-			}
+			HandleMoveNodes(change);
+			HandleRemoveNodes(change);
+			HandleCreateEdge(change);
+			HandleRemoveEdges(change);
 
 			return change;
 		}
+
+		private void HandleMoveNodes(GraphViewChange change)
+		{
+			if (change.movedElements == null)
+				return;
+
+			var nodesToMove = change.movedElements.OfType<WorkflowNode>().ToList();
+
+			var oldPositions = nodesToMove.Select(node => node.Position).ToList();
+			var newPositions = nodesToMove.Select(node => node.GetPosition().position).ToList();
+
+			var command = new MoveNodeCommand(nodesToMove, oldPositions, newPositions);
+			ExecuteCommand(command);
+		}
+
+		private void HandleRemoveNodes(GraphViewChange change)
+		{
+			if (change.elementsToRemove == null)
+				return;
+
+			var workflowNodes = change.elementsToRemove.OfType<WorkflowNode>().ToList();
+
+			if (workflowNodes.Count == 0)
+				return;
+
+			var command = new RemoveNodesCommand(workflowNodes);
+			ExecuteCommand(command);
+		}
+
+		private void HandleCreateEdge(GraphViewChange change)
+		{
+			if (change.edgesToCreate == null)
+				return;
+
+			var edgeToCreate = change.edgesToCreate.First();
+
+			var command = new AddEdgeCommand(edgeToCreate);
+			ExecuteCommand(command);
+		}
+
+		private void HandleRemoveEdges(GraphViewChange change)
+		{
+			if (change.elementsToRemove == null)
+				return;
+
+			var edgesToRemove = change.elementsToRemove.OfType<Edge>().ToList();
+
+			if (edgesToRemove.Count == 0)
+				return;
+
+			var command = new RemoveEdgesCommand(edgesToRemove);
+			ExecuteCommand(command);
+		}
+
+		#endregion
 
 		#region 歷史紀錄與執行
 
@@ -192,7 +213,7 @@ namespace SceneTransition.Editor.GraphViews
 
 		#endregion
 
-		#region 節點操作
+		#region 節點建立
 
 		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
 		{
@@ -214,15 +235,7 @@ namespace SceneTransition.Editor.GraphViews
 			{
 				var nodeData = JsonUtility.FromJson<NodeData>(data.NodeData);
 
-				WorkflowNode node = data.Type switch
-				{
-					OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
-					OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
-					OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
-					OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
-					OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
-					_                             => throw new Exception("未知的操作類型！"),
-				};
+				var node = CreateNodeByType(data, nodeData);
 
 				nodeIdToInstance[nodeData.Id] = node;
 
@@ -243,6 +256,20 @@ namespace SceneTransition.Editor.GraphViews
 				var edge = inputNode.Output.ConnectTo(outputNode.Input);
 				AddElement(edge);
 			}
+		}
+
+		private WorkflowNode CreateNodeByType(OperationData data, NodeData nodeData)
+		{
+			WorkflowNode node = data.Type switch
+			{
+				OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
+				OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
+				OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
+				OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
+				OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
+				_                             => throw new Exception("未知的操作類型！"),
+			};
+			return node;
 		}
 
 		#endregion
