@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using SceneTransition.Operations;
 using SceneTransition.ScriptableObjects.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;

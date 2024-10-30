@@ -17,8 +17,8 @@ namespace SceneTransition.Editor.GraphViews
 	{
 		private readonly SceneWorkflowGraphViewHistory _history = new();
 
-		private Vector2?     _dragStartPosition;
-		private WorkflowNode _draggingNode;
+		private Action<bool> _onDirtyChanged;
+		private bool         _isDirty;
 
 		public SceneWorkflowGraphView()
 		{
@@ -39,6 +39,88 @@ namespace SceneTransition.Editor.GraphViews
 			graphViewChanged += OnGraphViewChanged;
 		}
 
+		#region 初始化
+
+		// 新增樣式
+		private void AddStyles()
+		{
+			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/SceneTransition/Editor/GraphViews/SceneWorkflowGraphViewCss.uss");
+
+			styleSheets.Add(styleSheet);
+
+			style.flexGrow   = 1;
+			style.flexShrink = 1;
+
+			AddToClassList("workflow-graph-view");
+		}
+
+		// 新增節點右鍵選單
+		private void AddNodeContextMenu()
+		{
+			var manipulator = new ContextualMenuManipulator(menuEvent =>
+			{
+				menuEvent.menu.ClearItems();
+
+				menuEvent.menu.AppendAction(
+					"新增/讀取場景",
+					DropdownCreateNode<LoadSceneNode>
+				);
+
+				menuEvent.menu.AppendAction(
+					"新增/卸載所有場景",
+					DropdownCreateNode<UnloadAllScenesNode>
+				);
+
+				menuEvent.menu.AppendAction(
+					"轉場/進入",
+					DropdownCreateNode<TransitionInNode>
+				);
+
+				menuEvent.menu.AppendAction(
+					"轉場/退出",
+					DropdownCreateNode<TransitionOutNode>
+				);
+			});
+
+			this.AddManipulator(manipulator);
+		}
+
+		// 取得縮放後的滑鼠位置
+		private Vector2 GetMousePositionInWorldSpace(Vector2 mousePosition)
+		{
+			Vector2 viewPosition = viewTransform.matrix.inverse.MultiplyPoint3x4(mousePosition);
+
+			return viewPosition;
+		}
+
+		private void DropdownCreateNode<T>(DropdownMenuAction action) where T : WorkflowNode, new()
+		{
+			var mousePosition = GetMousePositionInWorldSpace(action.eventInfo.localMousePosition);
+
+			CreateNode<T>(mousePosition);
+		}
+
+		// 定義節點可連接的 Port
+		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+		{
+			var compatiblePorts = new List<Port>();
+
+			ports.ForEach(port =>
+			{
+				if (startPort.node == port.node)
+					return;
+
+				if (startPort.direction == port.direction)
+					return;
+
+				compatiblePorts.Add(port);
+			});
+
+			return compatiblePorts;
+		}
+
+		#endregion
+
 		#region UI 操作紀錄
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange change)
@@ -47,6 +129,8 @@ namespace SceneTransition.Editor.GraphViews
 			HandleRemoveNodes(change);
 			HandleCreateEdge(change);
 			HandleRemoveEdges(change);
+
+			SetDirty(true);
 
 			return change;
 		}
@@ -131,88 +215,6 @@ namespace SceneTransition.Editor.GraphViews
 
 		#endregion
 
-		#region 初始化
-
-		// 新增樣式
-		private void AddStyles()
-		{
-			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/SceneTransition/Editor/GraphViews/SceneWorkflowGraphViewCss.uss");
-
-			styleSheets.Add(styleSheet);
-
-			style.flexGrow   = 1;
-			style.flexShrink = 1;
-
-			AddToClassList("workflow-graph-view");
-		}
-
-		// 新增節點右鍵選單
-		private void AddNodeContextMenu()
-		{
-			var manipulator = new ContextualMenuManipulator(menuEvent =>
-			{
-				menuEvent.menu.ClearItems();
-
-				menuEvent.menu.AppendAction(
-					"新增/讀取場景",
-					DropdownCreateNode<LoadSceneNode>
-				);
-
-				menuEvent.menu.AppendAction(
-					"新增/卸載所有場景",
-					DropdownCreateNode<UnloadAllScenesNode>
-				);
-
-				menuEvent.menu.AppendAction(
-					"轉場/進入",
-					DropdownCreateNode<TransitionInNode>
-				);
-
-				menuEvent.menu.AppendAction(
-					"轉場/退出",
-					DropdownCreateNode<TransitionOutNode>
-				);
-			});
-
-			this.AddManipulator(manipulator);
-		}
-
-		// 取得縮放後的滑鼠位置
-		private Vector2 GetMousePositionInWorldSpace(Vector2 mousePosition)
-		{
-			Vector2 viewPosition = viewTransform.matrix.inverse.MultiplyPoint3x4(mousePosition);
-
-			return viewPosition;
-		}
-
-		private void DropdownCreateNode<T>(DropdownMenuAction action) where T : WorkflowNode, new()
-		{
-			var mousePosition = GetMousePositionInWorldSpace(action.eventInfo.localMousePosition);
-
-			CreateNode<T>(mousePosition);
-		}
-
-		// 定義節點可連接的 Port
-		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-		{
-			var compatiblePorts = new List<Port>();
-
-			ports.ForEach(port =>
-			{
-				if (startPort.node == port.node)
-					return;
-
-				if (startPort.direction == port.direction)
-					return;
-
-				compatiblePorts.Add(port);
-			});
-
-			return compatiblePorts;
-		}
-
-		#endregion
-
 		#region 節點建立
 
 		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
@@ -224,10 +226,12 @@ namespace SceneTransition.Editor.GraphViews
 
 			node.UpdatePosition(position);
 
+			SetDirty(true);
+
 			return node;
 		}
 
-		private void CreateNodes(List<OperationData> operationData)
+		private void CreateNodeByOperationData(List<OperationData> operationData)
 		{
 			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
 
@@ -296,6 +300,8 @@ namespace SceneTransition.Editor.GraphViews
 					? currentNode.Output.connections.First().input.node as WorkflowNode
 					: null;
 			}
+
+			SetDirty(false);
 		}
 
 		// 驗證可否儲存
@@ -336,9 +342,19 @@ namespace SceneTransition.Editor.GraphViews
 		public void LoadFromAsset(SceneWorkflowAsset asset)
 		{
 			DeleteElements(graphElements.ToList());
-			CreateNodes(asset.OperationData);
+			CreateNodeByOperationData(asset.OperationData);
 		}
 
 		#endregion
+
+		private void SetDirty(bool isDirty)
+		{
+			_isDirty = isDirty;
+
+			_onDirtyChanged?.Invoke(_isDirty);
+		}
+
+		public void RegisterOnDirtyChanged(Action<bool> onDirtyChanged)
+			=> _onDirtyChanged += onDirtyChanged;
 	}
 }

@@ -75,12 +75,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public override bool IsValidateToSave()
 		{
-			var isValidate = SceneAsset != null;
+			if (SceneAsset == null)
+				throw new System.Exception("請選擇場景資源");
 
-			if (!isValidate)
-				EditorUtility.DisplayDialog("錯誤", "請選擇場景資源", "確定");
-
-			return isValidate;
+			return true;
 		}
 	}
 }

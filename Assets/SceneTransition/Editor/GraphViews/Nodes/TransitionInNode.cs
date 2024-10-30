@@ -1,4 +1,5 @@
-﻿using SceneTransition.ScriptableObjects.Data;
+﻿using System;
+using SceneTransition.ScriptableObjects.Data;
 using SceneTransition.Transition;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -61,12 +62,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public override bool IsValidateToSave()
 		{
-			var isValidate = TransitionPrefab != null;
+			if (TransitionPrefab == null)
+				throw new Exception("轉場物件未設定");
 
-			if (!isValidate)
-				EditorUtility.DisplayDialog("錯誤", "請選擇轉場物件", "確定");
-
-			return isValidate;
+			return true;
 		}
 	}
 }

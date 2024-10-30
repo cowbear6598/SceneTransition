@@ -13,6 +13,8 @@ namespace SceneTransition.Editor.Windows
 		private SceneWorkflowGraphView _graphView;
 		private SceneWorkflowAsset     _workflowAsset;
 
+		private string _title;
+
 		[MenuItem("SceneTransition/流程編輯器")]
 		public static void OpenWindow()
 		{
@@ -24,12 +26,16 @@ namespace SceneTransition.Editor.Windows
 		{
 			CreateToolbar();
 
+			_title = "未命名";
+
 			_graphView                = new SceneWorkflowGraphView();
 			_graphView.style.flexGrow = 1;
 
 			rootVisualElement.Add(_graphView);
 
 			rootVisualElement.RegisterCallback<KeyDownEvent>(KeyMap);
+
+			_graphView.RegisterOnDirtyChanged(OnGraphViewDirtyChanged);
 		}
 
 		private void OnDisable()
@@ -87,7 +93,9 @@ namespace SceneTransition.Editor.Windows
 
 			_workflowAsset = asset;
 			_graphView.LoadFromAsset(asset);
-			titleContent = new GUIContent($"{asset.name}");
+
+			_title       = asset.name;
+			titleContent = new GUIContent($"{_title}");
 		}
 
 		private void Save()
@@ -124,7 +132,8 @@ namespace SceneTransition.Editor.Windows
 				AssetDatabase.CreateAsset(_workflowAsset, path);
 				AssetDatabase.SaveAssets();
 
-				titleContent = new GUIContent($"{path.Substring(path.LastIndexOf('/') + 1)}");
+				_title       = _workflowAsset.name;
+				titleContent = new GUIContent($"{_workflowAsset.name}");
 			}
 			catch (Exception e)
 			{
@@ -181,5 +190,10 @@ namespace SceneTransition.Editor.Windows
 		}
 
 		#endregion
+
+		private void OnGraphViewDirtyChanged(bool isDirty)
+		{
+			titleContent = new GUIContent($"{_title}{(isDirty ? "*" : "")}");
+		}
 	}
 }
