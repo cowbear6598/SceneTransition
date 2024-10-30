@@ -44,7 +44,10 @@ namespace SceneTransition.Editor.GraphViews
 		// 新增樣式
 		private void AddStyles()
 		{
-			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/SceneTransition/Editor/GraphViews/SceneWorkflowGraphViewCss.uss");
+			var guids = AssetDatabase.FindAssets("SceneWorkflowGraphViewCss t:StyleSheet");
+
+			var path       = AssetDatabase.GUIDToAssetPath(guids[0]);
+			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
 
 			styleSheets.Add(styleSheet);
 
