@@ -166,7 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9456df845cf64d04e9612efbb09136ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _workflowAsset: {fileID: 11400000, guid: 321463c145ddc5d4ca09b13bb8db4d4e, type: 2}
+  _workflow1Asset: {fileID: 11400000, guid: 64ff332a43e292440ae433765ba7960e, type: 2}
+  _workflow2Asset: {fileID: 11400000, guid: 6c0cc6d50a04a324ea7e9847dd13aca9, type: 2}
+  _workflow3Asset: {fileID: 11400000, guid: b9b762ba7097bcd4e8ba375a0490d5af, type: 2}
 --- !u!1 &136875352
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb25dde2dcf147b7962eb4a4e9ab5110, type: 3}
+  m_Name: "\u5834\u666F2\u8B80\u53D6"
+  m_EditorClassIdentifier: 
+  _operationData:
+  - rid: 2047251709218259012
+  - rid: 2047251709218259013
+  - rid: 2047251709218259014
+  - rid: 2047251709218259015
+  references:
+    version: 2
+    RefIds:
+    - rid: 2047251709218259012
+      type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 3
+        NodeData: '{"Id":"bc98f14a-609a-480a-9a30-170b485b53f0","Position":{"x":144.8000030517578,"y":206.39999389648438},"InputNodeId":"","OutputNodeId":"7b929b38-484b-49fa-9fcc-bbcabd4e4459"}'
+        TransitionPrefab: {fileID: 4844962037871926762, guid: 948c51b465a23a647b378d5577eaf636, type: 3}
+    - rid: 2047251709218259013
+      type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 1
+        NodeData: '{"Id":"7b929b38-484b-49fa-9fcc-bbcabd4e4459","Position":{"x":603.2000122070313,"y":290.3999938964844},"InputNodeId":"bc98f14a-609a-480a-9a30-170b485b53f0","OutputNodeId":"f34b6d5f-5801-4261-b28b-ff66223a04f5"}'
+    - rid: 2047251709218259014
+      type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 0
+        NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":894.4000244140625,"y":290.3999938964844},"InputNodeId":"7b929b38-484b-49fa-9fcc-bbcabd4e4459","OutputNodeId":"588e7a26-9738-43ab-8478-90d86fbd2c32"}'
+        SceneAsset:
+          m_AssetGUID: c111cd0e6bb406a4bbd0ffcd648f4198
+          m_SubObjectName: 
+          m_SubObjectType: 
+          m_EditorAssetChanged: 0
+    - rid: 2047251709218259015
+      type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 4
+        NodeData: '{"Id":"588e7a26-9738-43ab-8478-90d86fbd2c32","Position":{"x":1246.4000244140625,"y":308.8000183105469},"InputNodeId":"f34b6d5f-5801-4261-b28b-ff66223a04f5","OutputNodeId":""}'

@@ -6,11 +6,13 @@ namespace SceneTransition.Operations
 	{
 		public async UniTask Execute()
 		{
-			for (var i = 0; i < SceneRepository.Instance.LoadedSceneCount; i++)
-			{
-				var unloadLastSceneOperation = new UnloadLastSceneOperation();
+			var count = SceneRepository.Instance.LoadedSceneCount;
 
-				await unloadLastSceneOperation.Execute();
+			for (var i = 0; i < count; i++)
+			{
+				var operation = new UnloadLastSceneOperation();
+
+				await operation.Execute();
 			}
 		}
 	}

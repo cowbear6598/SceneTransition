@@ -9,7 +9,10 @@ namespace SceneTransition
 
 		private readonly Stack<SceneInstance> loadedScene = new();
 
-		public void AddLoadedScene(SceneInstance sceneInstance) => loadedScene.Push(sceneInstance);
+		public void AddLoadedScene(SceneInstance sceneInstance)
+		{
+			loadedScene.Push(sceneInstance);
+		}
 
 		public SceneInstance GetLastLoadedScene() => loadedScene.Pop();
 

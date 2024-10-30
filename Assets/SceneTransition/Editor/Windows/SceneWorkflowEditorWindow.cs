@@ -109,6 +109,9 @@ namespace SceneTransition.Editor.Windows
 
 			_workflowAsset.ClearOperations();
 			_graphView.SaveToAsset(_workflowAsset);
+
+			EditorUtility.SetDirty(_workflowAsset);
+			AssetDatabase.SaveAssets();
 		}
 
 		private void SaveAs()
