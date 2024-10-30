@@ -10,6 +10,8 @@ namespace SceneTransition.Editor.Windows
 {
 	public class SceneWorkflowEditorWindow : EditorWindow
 	{
+		[SerializeField] private string _assetPath;
+
 		private SceneWorkflowGraphView _graphView;
 		private SceneWorkflowAsset     _workflowAsset;
 
@@ -36,11 +38,26 @@ namespace SceneTransition.Editor.Windows
 			rootVisualElement.RegisterCallback<KeyDownEvent>(KeyMap);
 
 			_graphView.RegisterOnDirtyChanged(OnGraphViewDirtyChanged);
+
+			// 防止 Unity Compile 時丟失資料
+			if (string.IsNullOrEmpty(_assetPath))
+				return;
+
+			_workflowAsset = AssetDatabase.LoadAssetAtPath<SceneWorkflowAsset>(_assetPath);
+
+			if (_workflowAsset == null)
+				return;
+
+			Load(_workflowAsset);
 		}
 
 		private void OnDisable()
 		{
 			rootVisualElement.Remove(_graphView);
+
+			// 防止 Unity Compile 時丟失資料
+			if (_workflowAsset != null)
+				_assetPath = AssetDatabase.GetAssetPath(_workflowAsset);
 		}
 
 		#region 工具列
