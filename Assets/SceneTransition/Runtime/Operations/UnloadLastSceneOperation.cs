@@ -9,7 +9,11 @@ namespace SceneTransition.Operations
 		{
 			var sceneInstance = SceneRepository.Instance.GetLastLoadedScene();
 
+			var sceneName = sceneInstance.Scene.name;
+
 			await Addressables.UnloadSceneAsync(sceneInstance).Task;
+
+			SceneWorkflowEvent.RaiseSceneUnloaded(sceneName);
 		}
 	}
 }

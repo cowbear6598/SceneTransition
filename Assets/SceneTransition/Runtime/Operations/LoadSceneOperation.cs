@@ -15,6 +15,8 @@ namespace SceneTransition.Operations
 			var sceneInstance = await Addressables.LoadSceneAsync(sceneAsset, LoadSceneMode.Additive).Task;
 
 			SceneRepository.Instance.AddLoadedScene(sceneInstance);
+
+			SceneWorkflowEvent.RaiseSceneLoaded(sceneInstance.Scene.name);
 		}
 	}
 }

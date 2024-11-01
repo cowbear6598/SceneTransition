@@ -11,11 +11,13 @@ namespace SceneTransition.Operations
 		public TransitionInOperation(SceneTransitionBehaviour transitionPrefab) =>
 			this.transitionPrefab = transitionPrefab;
 
-		public UniTask Execute()
+		public async UniTask Execute()
 		{
 			var transition = Object.Instantiate(transitionPrefab);
 
-			return transition.TransitionIn();
+			await transition.TransitionIn();
+
+			SceneWorkflowEvent.RaiseTransitionInComplete();
 		}
 	}
 }

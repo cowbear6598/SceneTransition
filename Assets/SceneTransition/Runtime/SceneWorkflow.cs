@@ -4,7 +4,7 @@ using SceneTransition.Operations;
 
 namespace SceneTransition
 {
-	public class SceneWorkflow
+	internal class SceneWorkflow
 	{
 		private readonly Queue<IOperation> _operations = new();
 

@@ -3,7 +3,7 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace SceneTransition
 {
-	public class SceneRepository
+	internal class SceneRepository
 	{
 		public static SceneRepository Instance { get; } = new();
 
