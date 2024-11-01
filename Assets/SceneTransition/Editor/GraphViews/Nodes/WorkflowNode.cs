@@ -14,11 +14,14 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		public readonly Port Input;
 		public readonly Port Output;
 
-		protected WorkflowNode(string title)
+		private readonly SceneWorkflowGraphView _graphView;
+
+		protected WorkflowNode(string title, SceneWorkflowGraphView graphView)
 		{
 			Id = Guid.NewGuid().ToString();
 
 			this.title = title;
+			_graphView = graphView;
 
 			// 創建輸入端口
 			Input          = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));

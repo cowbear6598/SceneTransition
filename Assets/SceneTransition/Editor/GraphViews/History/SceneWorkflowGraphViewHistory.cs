@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using SceneTransition.Editor.GraphViews.Command;
-using UnityEngine;
+using SceneTransition.Editor.GraphViews.History.Command;
 
-namespace SceneTransition.Editor.GraphViews
+namespace SceneTransition.Editor.GraphViews.History
 {
 	public class SceneWorkflowGraphViewHistory
 	{

@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using SceneTransition.Editor.GraphViews.Command.Common;
+using SceneTransition.Editor.GraphViews.History.Command.Common;
 using SceneTransition.Editor.GraphViews.Nodes;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace SceneTransition.Editor.GraphViews.Command
+namespace SceneTransition.Editor.GraphViews.History.Command
 {
 	internal class RemoveEdgesCommand : IGraphViewCommand
 	{

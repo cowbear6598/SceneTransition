@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using SceneTransition.Editor.GraphViews.Nodes;
-using UnityEngine;
 
-namespace SceneTransition.Editor.GraphViews.Command
+namespace SceneTransition.Editor.GraphViews.History.Command
 {
 	internal class RemoveNodesCommand : IGraphViewCommand
 	{

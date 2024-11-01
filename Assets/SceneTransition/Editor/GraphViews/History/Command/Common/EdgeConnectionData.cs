@@ -1,4 +1,4 @@
-﻿namespace SceneTransition.Editor.GraphViews.Command.Common
+﻿namespace SceneTransition.Editor.GraphViews.History.Command.Common
 {
 	internal struct EdgeConnectionData
 	{

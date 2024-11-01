@@ -10,7 +10,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		private readonly FloatField _floatField;
 
-		public DelayNode() : base("等待")
+		public DelayNode(SceneWorkflowGraphView graphView) : base("等待", graphView)
 		{
 			_floatField = new FloatField("等待時間")
 			{

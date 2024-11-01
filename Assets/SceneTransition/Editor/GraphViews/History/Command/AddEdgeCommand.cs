@@ -1,8 +1,8 @@
-﻿using SceneTransition.Editor.GraphViews.Command.Common;
+﻿using SceneTransition.Editor.GraphViews.History.Command.Common;
 using SceneTransition.Editor.GraphViews.Nodes;
 using UnityEditor.Experimental.GraphView;
 
-namespace SceneTransition.Editor.GraphViews.Command
+namespace SceneTransition.Editor.GraphViews.History.Command
 {
 	internal class AddEdgeCommand : IGraphViewCommand
 	{

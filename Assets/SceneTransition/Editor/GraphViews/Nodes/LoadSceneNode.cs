@@ -13,7 +13,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		private readonly ObjectField _objectField;
 
-		public LoadSceneNode() : base("讀取場景")
+		public LoadSceneNode(SceneWorkflowGraphView graphView) : base("讀取場景", graphView)
 		{
 			_objectField = new ObjectField("場景資源")
 			{

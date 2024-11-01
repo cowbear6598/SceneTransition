@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SceneTransition.Editor.GraphViews.Command;
+using SceneTransition.Editor.GraphViews.History;
+using SceneTransition.Editor.GraphViews.History.Command;
 using SceneTransition.Editor.GraphViews.Nodes;
 using SceneTransition.Operations;
 using SceneTransition.ScriptableObjects;
@@ -16,12 +17,15 @@ namespace SceneTransition.Editor.GraphViews
 	public class SceneWorkflowGraphView : GraphView
 	{
 		private readonly SceneWorkflowGraphViewHistory _history = new();
+		private readonly WorkflowNodeFactory           _factory;
 
 		private Action<bool> _onDirtyChanged;
 		private bool         _isDirty;
 
 		public SceneWorkflowGraphView()
 		{
+			_factory = new WorkflowNodeFactory(this);
+
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
 			this.AddManipulator(new ContentDragger());
@@ -65,28 +69,33 @@ namespace SceneTransition.Editor.GraphViews
 				menuEvent.menu.ClearItems();
 
 				menuEvent.menu.AppendAction(
-					"新增/讀取場景",
-					DropdownCreateNode<LoadSceneNode>
+					"場景/讀取場景",
+					action => DropdownCreateNode(action, OperationType.LoadScene)
 				);
 
 				menuEvent.menu.AppendAction(
-					"新增/卸載所有場景",
-					DropdownCreateNode<UnloadAllScenesNode>
+					"場景/卸載所有場景",
+					action => DropdownCreateNode(action, OperationType.UnloadAllScenes)
+				);
+
+				menuEvent.menu.AppendAction(
+					"場景/卸載上一個場景",
+					action => DropdownCreateNode(action, OperationType.UnloadLastScene)
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/進入",
-					DropdownCreateNode<TransitionInNode>
+					action => DropdownCreateNode(action, OperationType.TransitionIn)
 				);
 
 				menuEvent.menu.AppendAction(
 					"轉場/退出",
-					DropdownCreateNode<TransitionOutNode>
+					action => DropdownCreateNode(action, OperationType.TransitionOut)
 				);
 
 				menuEvent.menu.AppendAction(
 					"延遲",
-					DropdownCreateNode<DelayNode>
+					action => DropdownCreateNode(action, OperationType.Delay)
 				);
 			});
 
@@ -101,11 +110,11 @@ namespace SceneTransition.Editor.GraphViews
 			return viewPosition;
 		}
 
-		private void DropdownCreateNode<T>(DropdownMenuAction action) where T : WorkflowNode, new()
+		private void DropdownCreateNode(DropdownMenuAction action, OperationType type)
 		{
 			var mousePosition = GetMousePositionInWorldSpace(action.eventInfo.localMousePosition);
 
-			CreateNode<T>(mousePosition);
+			AddNode(type, mousePosition);
 		}
 
 		// 定義節點可連接的 Port
@@ -225,21 +234,17 @@ namespace SceneTransition.Editor.GraphViews
 
 		#region 節點建立
 
-		private T CreateNode<T>(Vector2 position) where T : WorkflowNode, new()
+		private void AddNode(OperationType type, Vector2 position)
 		{
-			var node = new T();
+			var node = _factory.CreateNode(type, position);
 
 			var command = new AddNodeCommand(node, position);
 			ExecuteCommand(command);
 
-			node.UpdatePosition(position);
-
 			SetDirty(true);
-
-			return node;
 		}
 
-		private void CreateNodeByOperationData(List<OperationData> operationData)
+		private void AddNodeByOperationData(List<OperationData> operationData)
 		{
 			var nodeIdToInstance = new Dictionary<string, WorkflowNode>();
 
@@ -247,7 +252,7 @@ namespace SceneTransition.Editor.GraphViews
 			{
 				var nodeData = JsonUtility.FromJson<NodeData>(data.NodeData);
 
-				var node = CreateNodeByType(data, nodeData);
+				var node = _factory.CreateNode(data.Type, nodeData.Position);
 
 				nodeIdToInstance[nodeData.Id] = node;
 
@@ -268,21 +273,6 @@ namespace SceneTransition.Editor.GraphViews
 				var edge = inputNode.Output.ConnectTo(outputNode.Input);
 				AddElement(edge);
 			}
-		}
-
-		private WorkflowNode CreateNodeByType(OperationData data, NodeData nodeData)
-		{
-			WorkflowNode node = data.Type switch
-			{
-				OperationType.LoadScene       => CreateNode<LoadSceneNode>(nodeData.Position),
-				OperationType.UnloadAllScenes => CreateNode<UnloadAllScenesNode>(nodeData.Position),
-				OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
-				OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
-				OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
-				OperationType.Delay           => CreateNode<DelayNode>(nodeData.Position),
-				_                             => throw new Exception("未知的操作類型！"),
-			};
-			return node;
 		}
 
 		#endregion
@@ -353,7 +343,7 @@ namespace SceneTransition.Editor.GraphViews
 		public void LoadFromAsset(SceneWorkflowAsset asset)
 		{
 			DeleteElements(graphElements.ToList());
-			CreateNodeByOperationData(asset.OperationData);
+			AddNodeByOperationData(asset.OperationData);
 		}
 
 		#endregion

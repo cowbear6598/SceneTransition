@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using SceneTransition.Editor.GraphViews.Nodes;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace SceneTransition.Editor.GraphViews.Command.Common
+namespace SceneTransition.Editor.GraphViews.History.Command.Common
 {
 	internal static class EdgeUtils
 	{

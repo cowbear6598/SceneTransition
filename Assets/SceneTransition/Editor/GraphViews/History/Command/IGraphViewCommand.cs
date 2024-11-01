@@ -1,4 +1,4 @@
-﻿namespace SceneTransition.Editor.GraphViews.Command
+﻿namespace SceneTransition.Editor.GraphViews.History.Command
 {
 	public interface IGraphViewCommand
 	{

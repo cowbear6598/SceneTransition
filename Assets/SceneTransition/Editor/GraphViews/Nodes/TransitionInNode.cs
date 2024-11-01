@@ -14,7 +14,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		private readonly ObjectField _objectField;
 
-		public TransitionInNode() : base("轉場進入")
+		public TransitionInNode(SceneWorkflowGraphView graphView) : base("轉場進入", graphView)
 		{
 			_objectField = new ObjectField("轉換物件")
 			{
