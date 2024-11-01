@@ -95,7 +95,7 @@ namespace SceneTransition.Editor.GraphViews
 				);
 
 				menuEvent.menu.AppendAction(
-					"延遲",
+					"等待",
 					action => DropdownCreateNode(action, OperationType.Delay)
 				);
 			});
