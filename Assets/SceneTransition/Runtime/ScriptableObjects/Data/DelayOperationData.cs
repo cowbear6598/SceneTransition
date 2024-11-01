@@ -1,10 +1,12 @@
-﻿using SceneTransition.Operations;
+﻿using System;
+using SceneTransition.Operations;
 
 namespace SceneTransition.ScriptableObjects.Data
 {
+	[Serializable]
 	public class DelayOperationData : OperationData
 	{
-		public readonly float DelayTime;
+		public float DelayTime;
 
 		public DelayOperationData(string nodeData, float delayTime) : base(OperationType.Delay, nodeData)
 		{

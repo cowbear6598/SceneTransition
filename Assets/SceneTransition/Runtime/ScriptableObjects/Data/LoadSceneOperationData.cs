@@ -7,7 +7,7 @@ namespace SceneTransition.ScriptableObjects.Data
 	[Serializable]
 	public class LoadSceneOperationData : OperationData
 	{
-		public readonly AssetReference SceneAsset;
+		public AssetReference SceneAsset;
 
 		public LoadSceneOperationData(string nodeData, AssetReference sceneAsset) : base(OperationType.LoadScene, nodeData)
 		{
