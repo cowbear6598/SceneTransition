@@ -13,12 +13,17 @@ MonoBehaviour:
   m_Name: "\u5834\u666F3\u8B80\u53D6"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 5393378338911027202
+  - rid: 5393378338911027224
   references:
     version: 2
     RefIds:
-    - rid: 5393378338911027202
+    - rid: 5393378338911027224
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
         NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":894.4000244140625,"y":290.3999938964844},"InputNodeId":"","OutputNodeId":""}'
+        SceneAsset:
+          m_AssetGUID: 7a6ac76dd3010fa41a984ca972e5d2d7
+          m_SubObjectName: 
+          m_SubObjectType: 
+          m_EditorAssetChanged: 0
