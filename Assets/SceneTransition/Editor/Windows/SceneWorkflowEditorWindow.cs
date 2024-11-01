@@ -21,19 +21,14 @@ namespace SceneTransition.Editor.Windows
 		public static void OpenWindow()
 		{
 			var window = GetWindow<SceneWorkflowEditorWindow>();
-			window.titleContent = new GUIContent("未命名");
+			window.titleContent       = new GUIContent("未命名");
+			window.saveChangesMessage = "是否儲存變更?";
 		}
 
 		private void OnEnable()
 		{
 			CreateToolbar();
-
-			_title = "未命名";
-
-			_graphView                = new SceneWorkflowGraphView();
-			_graphView.style.flexGrow = 1;
-
-			rootVisualElement.Add(_graphView);
+			CreateGraphView();
 
 			rootVisualElement.RegisterCallback<KeyDownEvent>(KeyMap);
 
@@ -59,6 +54,20 @@ namespace SceneTransition.Editor.Windows
 			if (_workflowAsset != null)
 				_assetPath = AssetDatabase.GetAssetPath(_workflowAsset);
 		}
+
+		#region 初始化
+
+		private void CreateGraphView()
+		{
+			_title = "未命名";
+
+			_graphView                = new SceneWorkflowGraphView();
+			_graphView.style.flexGrow = 1;
+
+			rootVisualElement.Add(_graphView);
+		}
+
+		#endregion
 
 		#region 工具列
 
@@ -211,9 +220,8 @@ namespace SceneTransition.Editor.Windows
 
 		#endregion
 
-		private void OnGraphViewDirtyChanged(bool isDirty)
-		{
-			titleContent = new GUIContent($"{_title}{(isDirty ? "*" : "")}");
-		}
+		private void OnGraphViewDirtyChanged(bool isDirty) => hasUnsavedChanges = isDirty;
+
+		public override void SaveChanges() => Save();
 	}
 }

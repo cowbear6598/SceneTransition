@@ -19,8 +19,9 @@ namespace SceneTransition.Editor.GraphViews
 		private readonly SceneWorkflowGraphViewHistory _history = new();
 		private readonly WorkflowNodeFactory           _factory;
 
+		public bool IsDirty { get; private set; }
+
 		private Action<bool> _onDirtyChanged;
-		private bool         _isDirty;
 
 		public SceneWorkflowGraphView()
 		{
@@ -308,9 +309,9 @@ namespace SceneTransition.Editor.GraphViews
 		// 驗證可否儲存
 		private bool ValidateSave()
 		{
-			var nodes = this.nodes.ToList().OfType<WorkflowNode>().ToList();
+			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
 
-			if (nodes.Count == 0)
+			if (workflowNodes.Count == 0)
 			{
 				EditorUtility.DisplayDialog("儲存失敗", "請建立節點後再進行儲存！", "確定");
 
@@ -318,8 +319,8 @@ namespace SceneTransition.Editor.GraphViews
 			}
 
 			// 檢查起/終點是否只有一個
-			var startNodes = nodes.Count(node => !node.Input.connected);
-			var endNodes   = nodes.Count(node => !node.Output.connected);
+			var startNodes = workflowNodes.Count(node => !node.Input.connected);
+			var endNodes   = workflowNodes.Count(node => !node.Output.connected);
 
 			if (startNodes != 1)
 			{
@@ -339,7 +340,7 @@ namespace SceneTransition.Editor.GraphViews
 				return false;
 			}
 
-			return nodes.All(node => node.IsValidateToSave());
+			return workflowNodes.All(node => node.IsValidateToSave());
 		}
 
 		public void LoadFromAsset(SceneWorkflowAsset asset)
@@ -352,9 +353,9 @@ namespace SceneTransition.Editor.GraphViews
 
 		private void SetDirty(bool isDirty)
 		{
-			_isDirty = isDirty;
+			IsDirty = isDirty;
 
-			_onDirtyChanged?.Invoke(_isDirty);
+			_onDirtyChanged?.Invoke(IsDirty);
 		}
 
 		public void RegisterOnDirtyChanged(Action<bool> onDirtyChanged)
