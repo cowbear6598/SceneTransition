@@ -122,6 +122,9 @@ namespace SceneTransition.Editor.Windows
 
 			_title       = asset.name;
 			titleContent = new GUIContent($"{_title}");
+
+			hasUnsavedChanges           = false;
+			EditorApplication.delayCall = () => _graphView.FrameAll();
 		}
 
 		private void Save()
