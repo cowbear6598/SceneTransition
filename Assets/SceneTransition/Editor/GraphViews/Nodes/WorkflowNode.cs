@@ -14,7 +14,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		public readonly Port Input;
 		public readonly Port Output;
 
-		private readonly SceneWorkflowGraphView _graphView;
+		protected readonly SceneWorkflowGraphView _graphView;
 
 		protected WorkflowNode(string title, SceneWorkflowGraphView graphView)
 		{
@@ -69,9 +69,9 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		protected abstract OperationData ToOperationData(string nodeData);
 
-		public void SetId(string Id) => this.Id = Id;
+		internal void SetId(string Id) => this.Id = Id;
 
-		public virtual bool IsValidateToSave()                        => true;
-		public virtual void LoadFromData(OperationData operationData) { }
+		internal virtual bool IsValidateToSave()                        => true;
+		internal virtual void LoadFromData(OperationData operationData) { }
 	}
 }

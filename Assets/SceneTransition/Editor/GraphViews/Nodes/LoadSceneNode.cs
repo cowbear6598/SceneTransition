@@ -1,5 +1,7 @@
-﻿using SceneTransition.ScriptableObjects.Data;
+﻿using SceneTransition.Editor.GraphViews.History.Command;
+using SceneTransition.ScriptableObjects.Data;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -26,8 +28,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			{
 				if (e.newValue == null)
 				{
-					_sceneAsset = null;
-
+					ChangeSceneAsset(null);
 					return;
 				}
 
@@ -36,35 +37,42 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				if (!assetPath.EndsWith(".unity"))
 				{
 					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是場景資源", "確定");
-
-					_objectField.SetValueWithoutNotify(null);
-					_sceneAsset = null;
-
+					_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
 					return;
 				}
 
-				var guid = AssetDatabase.AssetPathToGUID(assetPath);
+				var guid             = AssetDatabase.AssetPathToGUID(assetPath);
+				var addressableAsset = AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid);
 
-				if (UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid) != null)
-				{
-					_sceneAsset = new AssetReference(guid);
-				}
-				else
+				if (addressableAsset == null)
 				{
 					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不在 Addressable 中", "確定");
-
-					_objectField.SetValueWithoutNotify(null);
-					_sceneAsset = null;
+					_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
+					return;
 				}
+
+				ChangeSceneAsset(new AssetReference(guid));
 			});
 
 			mainContainer.Add(_objectField);
 		}
 
+		private void ChangeSceneAsset(AssetReference sceneAsset)
+		{
+			var oldData = CreateOperationData();
+
+			_sceneAsset = sceneAsset;
+
+			var newData = CreateOperationData();
+			var command = new ChangePropertyCommand(this, newData, oldData);
+
+			_graphView.ExecuteCommand(command);
+		}
+
 		protected override OperationData ToOperationData(string nodeData)
 			=> new LoadSceneOperationData(nodeData, _sceneAsset);
 
-		public override void LoadFromData(OperationData operationData)
+		internal override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as LoadSceneOperationData;
 
@@ -73,7 +81,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
 		}
 
-		public override bool IsValidateToSave()
+		internal override bool IsValidateToSave()
 		{
 			if (_sceneAsset != null)
 				return true;

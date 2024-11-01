@@ -23,7 +23,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				_                             => throw new Exception("未知的操作類型！"),
 			};
 
+			_graphView.AddElement(node);
+
 			node.UpdatePosition(position);
+			node.SetPosition(new Rect(position, Vector2.zero));
 
 			return node;
 		}

@@ -1,4 +1,5 @@
-﻿using SceneTransition.ScriptableObjects.Data;
+﻿using SceneTransition.Editor.GraphViews.History.Command;
+using SceneTransition.ScriptableObjects.Data;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,15 +20,25 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 			_floatField.RegisterValueChangedCallback(e =>
 			{
-				_delayTime = Mathf.Clamp(e.newValue, 0, float.MaxValue);
-
-				_floatField.SetValueWithoutNotify(_delayTime);
+				ChangeDelayTime(e.newValue);
 			});
 
 			mainContainer.Add(_floatField);
 		}
 
-		public override void LoadFromData(OperationData operationData)
+		private void ChangeDelayTime(float delayTime)
+		{
+			var oldData = CreateOperationData();
+
+			_delayTime = Mathf.Clamp(delayTime, 0, float.MaxValue);
+
+			var newData = CreateOperationData();
+
+			var command = new ChangePropertyCommand(this, newData, oldData);
+			_graphView.ExecuteCommand(command);
+		}
+
+		internal override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as DelayOperationData;
 

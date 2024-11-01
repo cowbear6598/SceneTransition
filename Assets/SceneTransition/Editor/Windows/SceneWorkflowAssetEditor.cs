@@ -21,8 +21,8 @@ namespace SceneTransition.Editor.Windows
 			{
 				var window = EditorWindow.GetWindow<SceneWorkflowEditorWindow>();
 
-				window.Load(target as SceneWorkflowAsset);
 				window.Show();
+				window.Load(target as SceneWorkflowAsset);
 			}
 		}
 	}

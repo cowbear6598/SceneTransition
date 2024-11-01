@@ -147,8 +147,6 @@ namespace SceneTransition.Editor.GraphViews
 			HandleCreateEdge(change);
 			HandleRemoveEdges(change);
 
-			SetDirty(true);
-
 			return change;
 		}
 
@@ -209,11 +207,13 @@ namespace SceneTransition.Editor.GraphViews
 
 		#region 歷史紀錄與執行
 
-		private void ExecuteCommand(IGraphViewCommand command)
+		internal void ExecuteCommand(IGraphViewCommand command)
 		{
 			command.Execute(this);
 			_history.RecordCommand(command);
 			_history.ClearRedo();
+
+			SetDirty(true);
 		}
 
 		public void Undo()
@@ -221,6 +221,8 @@ namespace SceneTransition.Editor.GraphViews
 			var command = _history.Undo();
 
 			command?.Undo(this);
+
+			SetDirty(true);
 		}
 
 		public void Redo()
@@ -228,6 +230,8 @@ namespace SceneTransition.Editor.GraphViews
 			var command = _history.Redo();
 
 			command?.Execute(this);
+
+			SetDirty(true);
 		}
 
 		#endregion
@@ -240,8 +244,6 @@ namespace SceneTransition.Editor.GraphViews
 
 			var command = new AddNodeCommand(node, position);
 			ExecuteCommand(command);
-
-			SetDirty(true);
 		}
 
 		private void AddNodeByOperationData(List<OperationData> operationData)
