@@ -2,7 +2,7 @@
 
 namespace SceneTransition.Operations
 {
-	public class UnloadAllScenesOperation : IOperation
+	internal class UnloadAllScenesOperation : IOperation
 	{
 		public async UniTask Execute()
 		{

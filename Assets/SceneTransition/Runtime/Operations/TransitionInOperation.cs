@@ -4,7 +4,7 @@ using Object = UnityEngine.Object;
 
 namespace SceneTransition.Operations
 {
-	public class TransitionInOperation : IOperation
+	internal class TransitionInOperation : IOperation
 	{
 		private readonly SceneTransitionBehaviour transitionPrefab;
 

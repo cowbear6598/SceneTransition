@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
-	public class RemoveNodesCommand : IGraphViewCommand
+	internal class RemoveNodesCommand : IGraphViewCommand
 	{
 		private readonly List<WorkflowNode> _nodes;
 

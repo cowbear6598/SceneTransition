@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace SceneTransition.Operations
 {
-	public class TransitionOutOperation : IOperation
+	internal class TransitionOutOperation : IOperation
 	{
 		public async UniTask Execute()
 		{

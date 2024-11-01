@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
-	public class AddEdgeCommand : IGraphViewCommand
+	internal class AddEdgeCommand : IGraphViewCommand
 	{
 		private bool _isInitialized = true;
 

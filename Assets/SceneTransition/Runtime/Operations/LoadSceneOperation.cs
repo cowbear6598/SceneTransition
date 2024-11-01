@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace SceneTransition.Operations
 {
-	public class LoadSceneOperation : IOperation
+	internal class LoadSceneOperation : IOperation
 	{
 		private readonly AssetReference sceneAsset;
 

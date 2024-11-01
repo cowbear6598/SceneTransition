@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
-	public class MoveNodeCommand : IGraphViewCommand
+	internal class MoveNodeCommand : IGraphViewCommand
 	{
 		private readonly List<WorkflowNode> _node;
 		private readonly List<Vector2>      _oldPosition;

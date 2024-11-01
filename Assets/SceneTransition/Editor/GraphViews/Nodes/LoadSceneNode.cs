@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
-	public class LoadSceneNode : WorkflowNode
+	internal class LoadSceneNode : WorkflowNode
 	{
-		public AssetReference SceneAsset { get; private set; }
+		private AssetReference _sceneAsset;
 
 		private readonly ObjectField _objectField;
 
@@ -26,7 +26,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			{
 				if (e.newValue == null)
 				{
-					SceneAsset = null;
+					_sceneAsset = null;
 
 					return;
 				}
@@ -38,7 +38,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是場景資源", "確定");
 
 					_objectField.SetValueWithoutNotify(null);
-					SceneAsset = null;
+					_sceneAsset = null;
 
 					return;
 				}
@@ -47,14 +47,14 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 				if (UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid) != null)
 				{
-					SceneAsset = new AssetReference(guid);
+					_sceneAsset = new AssetReference(guid);
 				}
 				else
 				{
 					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不在 Addressable 中", "確定");
 
 					_objectField.SetValueWithoutNotify(null);
-					SceneAsset = null;
+					_sceneAsset = null;
 				}
 			});
 
@@ -62,20 +62,20 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		}
 
 		protected override OperationData MakeOperationData(string nodeData)
-			=> new LoadSceneOperationData(nodeData, SceneAsset);
+			=> new LoadSceneOperationData(nodeData, _sceneAsset);
 
 		public override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as LoadSceneOperationData;
 
-			SceneAsset = data.SceneAsset;
+			_sceneAsset = data.SceneAsset;
 
-			_objectField.SetValueWithoutNotify(SceneAsset?.editorAsset);
+			_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
 		}
 
 		public override bool IsValidateToSave()
 		{
-			if (SceneAsset == null)
+			if (_sceneAsset == null)
 				throw new System.Exception("請選擇場景資源");
 
 			return true;

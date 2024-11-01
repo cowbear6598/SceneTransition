@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	[Serializable]
-	public class NodeData
+	internal class NodeData
 	{
 		public string  Id;
 		public Vector2 Position;

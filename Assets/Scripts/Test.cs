@@ -1,4 +1,3 @@
-using System;
 using SceneTransition;
 using SceneTransition.ScriptableObjects;
 using UnityEngine;

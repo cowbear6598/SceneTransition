@@ -8,9 +8,9 @@ using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
-	public class TransitionInNode : WorkflowNode
+	internal class TransitionInNode : WorkflowNode
 	{
-		public SceneTransitionBehaviour TransitionPrefab { get; private set; }
+		private SceneTransitionBehaviour _transitionPrefab;
 
 		private readonly ObjectField _objectField;
 
@@ -27,14 +27,14 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			{
 				if (e.newValue == null)
 				{
-					TransitionPrefab = null;
+					_transitionPrefab = null;
 
 					return;
 				}
 
 				var assetPath = AssetDatabase.GetAssetPath(e.newValue);
 
-				TransitionPrefab = e.newValue as SceneTransitionBehaviour;
+				_transitionPrefab = e.newValue as SceneTransitionBehaviour;
 
 				if (assetPath.EndsWith(".prefab"))
 					return;
@@ -42,27 +42,27 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是 Prefab。", "確定");
 
 				_objectField.SetValueWithoutNotify(null);
-				TransitionPrefab = null;
+				_transitionPrefab = null;
 			});
 
 			mainContainer.Add(_objectField);
 		}
 
 		protected override OperationData MakeOperationData(string nodeData)
-			=> new TransitionInOperationData(nodeData, TransitionPrefab);
+			=> new TransitionInOperationData(nodeData, _transitionPrefab);
 
 		public override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as TransitionInOperationData;
 
-			TransitionPrefab = data.TransitionPrefab;
+			_transitionPrefab = data.TransitionPrefab;
 
-			_objectField.SetValueWithoutNotify(TransitionPrefab);
+			_objectField.SetValueWithoutNotify(_transitionPrefab);
 		}
 
 		public override bool IsValidateToSave()
 		{
-			if (TransitionPrefab == null)
+			if (_transitionPrefab == null)
 				throw new Exception("轉場物件未設定");
 
 			return true;

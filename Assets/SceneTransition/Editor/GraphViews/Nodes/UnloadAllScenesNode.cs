@@ -2,7 +2,7 @@
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
-	public class UnloadAllScenesNode : WorkflowNode
+	internal class UnloadAllScenesNode : WorkflowNode
 	{
 		public UnloadAllScenesNode() : base("移除所有場景") { }
 

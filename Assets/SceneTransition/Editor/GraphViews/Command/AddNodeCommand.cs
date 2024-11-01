@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
-	public class AddNodeCommand : IGraphViewCommand
+	internal class AddNodeCommand : IGraphViewCommand
 	{
 		private readonly WorkflowNode _workflowNode;
 		private readonly Vector2      _position;

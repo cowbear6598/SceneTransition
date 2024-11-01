@@ -2,7 +2,7 @@
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
-	public class UnloadLastSceneNode : WorkflowNode
+	internal class UnloadLastSceneNode : WorkflowNode
 	{
 		public UnloadLastSceneNode() : base("移除上一個場景") { }
 

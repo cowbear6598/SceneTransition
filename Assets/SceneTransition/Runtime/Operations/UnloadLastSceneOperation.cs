@@ -3,7 +3,7 @@ using UnityEngine.AddressableAssets;
 
 namespace SceneTransition.Operations
 {
-	public class UnloadLastSceneOperation : IOperation
+	internal class UnloadLastSceneOperation : IOperation
 	{
 		public async UniTask Execute()
 		{

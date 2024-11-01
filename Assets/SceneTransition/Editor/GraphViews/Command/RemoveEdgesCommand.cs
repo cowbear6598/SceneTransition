@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Command
 {
-	public class RemoveEdgesCommand : IGraphViewCommand
+	internal class RemoveEdgesCommand : IGraphViewCommand
 	{
 		private readonly List<EdgeConnectionData> _connectionData;
 
