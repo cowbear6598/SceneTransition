@@ -27,6 +27,15 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_floatField);
 		}
 
-		protected override OperationData MakeOperationData(string nodeData) => throw new System.NotImplementedException();
+		public override void LoadFromData(OperationData operationData)
+		{
+			var data = operationData as DelayOperationData;
+
+			_delayTime = data.DelayTime;
+
+			_floatField.SetValueWithoutNotify(_delayTime);
+		}
+
+		protected override OperationData ToOperationData(string nodeData) => new DelayOperationData(nodeData, _delayTime);
 	}
 }

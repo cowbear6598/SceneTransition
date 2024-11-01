@@ -83,6 +83,11 @@ namespace SceneTransition.Editor.GraphViews
 					"轉場/退出",
 					DropdownCreateNode<TransitionOutNode>
 				);
+
+				menuEvent.menu.AppendAction(
+					"延遲",
+					DropdownCreateNode<DelayNode>
+				);
 			});
 
 			this.AddManipulator(manipulator);
@@ -274,6 +279,7 @@ namespace SceneTransition.Editor.GraphViews
 				OperationType.UnloadLastScene => CreateNode<UnloadLastSceneNode>(nodeData.Position),
 				OperationType.TransitionIn    => CreateNode<TransitionInNode>(nodeData.Position),
 				OperationType.TransitionOut   => CreateNode<TransitionOutNode>(nodeData.Position),
+				OperationType.Delay           => CreateNode<DelayNode>(nodeData.Position),
 				_                             => throw new Exception("未知的操作類型！"),
 			};
 			return node;
@@ -285,8 +291,8 @@ namespace SceneTransition.Editor.GraphViews
 
 		public void SaveToAsset(SceneWorkflowAsset asset)
 		{
-			if (!ValidateSave(out var errorMessage))
-				throw new Exception(errorMessage);
+			if (!ValidateSave())
+				return;
 
 			// 儲存至 Asset
 			var workflowNodes = nodes.ToList().OfType<WorkflowNode>().ToList();
@@ -308,15 +314,13 @@ namespace SceneTransition.Editor.GraphViews
 		}
 
 		// 驗證可否儲存
-		private bool ValidateSave(out string errorMessage)
+		private bool ValidateSave()
 		{
-			errorMessage = string.Empty;
-
 			var nodes = this.nodes.ToList().OfType<WorkflowNode>().ToList();
 
 			if (nodes.Count == 0)
 			{
-				errorMessage = "請建立節點後再進行儲存！";
+				EditorUtility.DisplayDialog("儲存失敗", "請建立節點後再進行儲存！", "確定");
 
 				return false;
 			}
@@ -327,14 +331,18 @@ namespace SceneTransition.Editor.GraphViews
 
 			if (startNodes != 1)
 			{
-				errorMessage = startNodes == 0 ? "請確保有起點！" : "請確保只有一個起點！";
+				var errorMessage = startNodes == 0 ? "請確保有起點！" : "請確保只有一個起點！";
+
+				EditorUtility.DisplayDialog("儲存失敗", errorMessage, "確定");
 
 				return false;
 			}
 
 			if (endNodes != 1)
 			{
-				errorMessage = endNodes == 0 ? "請確保有終點！" : "請確保只有一個終點！";
+				var errorMessage = endNodes == 0 ? "請確保有終點！" : "請確保只有一個終點！";
+
+				EditorUtility.DisplayDialog("儲存失敗", errorMessage, "確定");
 
 				return false;
 			}

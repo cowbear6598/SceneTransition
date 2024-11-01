@@ -7,5 +7,6 @@
 		UnloadLastScene,
 		TransitionIn,
 		TransitionOut,
+		Delay,
 	}
 }

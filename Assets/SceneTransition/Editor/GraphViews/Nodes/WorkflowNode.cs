@@ -61,10 +61,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				nodeData.OutputNodeId = (connections[0].input.node as WorkflowNode).Id;
 			}
 
-			return MakeOperationData(JsonUtility.ToJson(nodeData));
+			return ToOperationData(JsonUtility.ToJson(nodeData));
 		}
 
-		protected abstract OperationData MakeOperationData(string nodeData);
+		protected abstract OperationData ToOperationData(string nodeData);
 
 		public void SetId(string Id) => this.Id = Id;
 

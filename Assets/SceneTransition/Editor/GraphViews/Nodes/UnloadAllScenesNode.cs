@@ -6,6 +6,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	{
 		public UnloadAllScenesNode() : base("移除所有場景") { }
 
-		protected override OperationData MakeOperationData(string nodeData) => new UnloadAllScenesOperationData(nodeData);
+		protected override OperationData ToOperationData(string nodeData) => new UnloadAllScenesOperationData(nodeData);
 	}
 }

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb25dde2dcf147b7962eb4a4e9ab5110, type: 3}
-  m_Name: "\u5834\u666F3\u8B80\u53D6"
+  m_Name: 1
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 5393378338911027202
+  - rid: 5393378338911027201
   references:
     version: 2
     RefIds:
-    - rid: 5393378338911027202
-      type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+    - rid: 5393378338911027201
+      type: {class: DelayOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
-        Type: 0
-        NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":894.4000244140625,"y":290.3999938964844},"InputNodeId":"","OutputNodeId":""}'
+        Type: 5
+        NodeData: '{"Id":"eb141f80-642b-4fc9-82f3-f23c722ecd27","Position":{"x":154.39999389648438,"y":111.20000457763672},"InputNodeId":"","OutputNodeId":""}'

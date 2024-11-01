@@ -48,7 +48,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_objectField);
 		}
 
-		protected override OperationData MakeOperationData(string nodeData)
+		protected override OperationData ToOperationData(string nodeData)
 			=> new TransitionInOperationData(nodeData, _transitionPrefab);
 
 		public override void LoadFromData(OperationData operationData)
@@ -62,10 +62,12 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public override bool IsValidateToSave()
 		{
-			if (_transitionPrefab == null)
-				throw new Exception("轉場物件未設定");
+			if (_transitionPrefab != null)
+				return true;
 
-			return true;
+			EditorUtility.DisplayDialog("錯誤", "請選擇轉場物件。", "確定");
+
+			return false;
 		}
 	}
 }

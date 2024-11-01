@@ -6,6 +6,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	{
 		public TransitionOutNode() : base("轉場退出") { }
 
-		protected override OperationData MakeOperationData(string nodeData) => new TransitionOutOperationData(nodeData);
+		protected override OperationData ToOperationData(string nodeData) => new TransitionOutOperationData(nodeData);
 	}
 }

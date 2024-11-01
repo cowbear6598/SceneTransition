@@ -61,7 +61,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			mainContainer.Add(_objectField);
 		}
 
-		protected override OperationData MakeOperationData(string nodeData)
+		protected override OperationData ToOperationData(string nodeData)
 			=> new LoadSceneOperationData(nodeData, _sceneAsset);
 
 		public override void LoadFromData(OperationData operationData)
@@ -75,10 +75,12 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 
 		public override bool IsValidateToSave()
 		{
-			if (_sceneAsset == null)
-				throw new System.Exception("請選擇場景資源");
+			if (_sceneAsset != null)
+				return true;
 
-			return true;
+			EditorUtility.DisplayDialog("錯誤", "場景資源未設定", "確定");
+
+			return false;
 		}
 	}
 }

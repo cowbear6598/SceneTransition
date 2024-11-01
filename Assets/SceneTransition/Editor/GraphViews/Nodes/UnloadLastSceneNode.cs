@@ -6,6 +6,6 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	{
 		public UnloadLastSceneNode() : base("移除上一個場景") { }
 
-		protected override OperationData MakeOperationData(string nodeData) => new UnloadLastSceneOperationData(nodeData);
+		protected override OperationData ToOperationData(string nodeData) => new UnloadLastSceneOperationData(nodeData);
 	}
 }

@@ -13,30 +13,24 @@ MonoBehaviour:
   m_Name: "\u5834\u666F1\u8B80\u53D6"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 2047251709218259009
-  - rid: 2047251709218259010
-  - rid: 2047251709218259011
+  - rid: 5393378338911027210
+  - rid: 5393378338911027211
+  - rid: 5393378338911027212
   references:
     version: 2
     RefIds:
-    - rid: 2047251709218259009
+    - rid: 5393378338911027210
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
-        NodeData: '{"Id":"bc98f14a-609a-480a-9a30-170b485b53f0","Position":{"x":279.20001220703127,"y":199.20001220703126},"InputNodeId":"","OutputNodeId":"f34b6d5f-5801-4261-b28b-ff66223a04f5"}'
-        TransitionPrefab: {fileID: 4844962037871926762, guid: 948c51b465a23a647b378d5577eaf636, type: 3}
-    - rid: 2047251709218259010
+        NodeData: '{"Id":"6a30f1f4-b3e9-4509-922a-52f16bb7e48c","Position":{"x":194.39999389648438,"y":281.6000061035156},"InputNodeId":"","OutputNodeId":"6b66dc1b-af50-44c5-b4f5-e0bb8f86fa5a"}'
+    - rid: 5393378338911027211
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":750.4000244140625,"y":317.6000061035156},"InputNodeId":"bc98f14a-609a-480a-9a30-170b485b53f0","OutputNodeId":"588e7a26-9738-43ab-8478-90d86fbd2c32"}'
-        SceneAsset:
-          m_AssetGUID: e9665395f820adc469eb0d8e6ca43d68
-          m_SubObjectName: 
-          m_SubObjectType: 
-          m_EditorAssetChanged: 0
-    - rid: 2047251709218259011
+        NodeData: '{"Id":"6b66dc1b-af50-44c5-b4f5-e0bb8f86fa5a","Position":{"x":619.2000122070313,"y":281.6000061035156},"InputNodeId":"6a30f1f4-b3e9-4509-922a-52f16bb7e48c","OutputNodeId":"d7ad3f74-b739-46fa-85e3-e549d090a20e"}'
+    - rid: 5393378338911027212
       type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 4
-        NodeData: '{"Id":"588e7a26-9738-43ab-8478-90d86fbd2c32","Position":{"x":1109.5999755859375,"y":317.6000061035156},"InputNodeId":"f34b6d5f-5801-4261-b28b-ff66223a04f5","OutputNodeId":""}'
+        NodeData: '{"Id":"d7ad3f74-b739-46fa-85e3-e549d090a20e","Position":{"x":924.0,"y":281.6000061035156},"InputNodeId":"6b66dc1b-af50-44c5-b4f5-e0bb8f86fa5a","OutputNodeId":""}'

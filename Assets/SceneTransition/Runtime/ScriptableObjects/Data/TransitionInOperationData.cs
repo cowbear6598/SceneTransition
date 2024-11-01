@@ -8,7 +8,7 @@ namespace SceneTransition.ScriptableObjects.Data
 	[Serializable]
 	public class TransitionInOperationData : OperationData
 	{
-		public SceneTransitionBehaviour TransitionPrefab;
+		public readonly SceneTransitionBehaviour TransitionPrefab;
 
 		public TransitionInOperationData(string nodeData, SceneTransitionBehaviour transitionPrefab) : base(OperationType.TransitionIn, nodeData)
 		{
