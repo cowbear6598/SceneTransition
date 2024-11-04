@@ -3,6 +3,7 @@ using SceneTransition.ScriptableObjects.Data;
 using SceneTransition.Transition;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
@@ -10,8 +11,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	internal class TransitionInNode : WorkflowNode
 	{
 		private SceneTransitionBehaviour _transitionPrefab;
+		private float                    _delayTime;
 
 		private readonly ObjectField _objectField;
+		private readonly FloatField  _delayTimeField;
 
 		public TransitionInNode(SceneWorkflowGraphView graphView) : base("轉場進入", graphView)
 		{
@@ -42,7 +45,30 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				ChangeTransitionPrefab(e.newValue as SceneTransitionBehaviour);
 			});
 
+			_delayTimeField = new FloatField("等待時間")
+			{
+				style = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
+			};
+
+			_delayTimeField.RegisterValueChangedCallback(e =>
+			{
+				ChangeDelayTime(e.newValue);
+			});
+
 			mainContainer.Add(_objectField);
+			mainContainer.Add(_delayTimeField);
+		}
+
+		private void ChangeDelayTime(float delayTime)
+		{
+			var oldData = CreateOperationData();
+
+			_delayTime = Mathf.Clamp(delayTime, 0, float.MaxValue);
+
+			var newData = CreateOperationData();
+
+			var command = new ChangePropertyCommand(this, newData, oldData);
+			_graphView.ExecuteCommand(command);
 		}
 
 		private void ChangeTransitionPrefab(SceneTransitionBehaviour newPrefab)
@@ -58,15 +84,17 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		}
 
 		protected override OperationData ToOperationData(string nodeData)
-			=> new TransitionInOperationData(nodeData, _transitionPrefab);
+			=> new TransitionInOperationData(nodeData, _transitionPrefab, _delayTime);
 
 		internal override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as TransitionInOperationData;
 
 			_transitionPrefab = data.TransitionPrefab;
+			_delayTime        = data.DelayTime;
 
 			_objectField.SetValueWithoutNotify(_transitionPrefab);
+			_delayTimeField.SetValueWithoutNotify(_delayTime);
 		}
 
 		internal override bool IsValidateToSave()

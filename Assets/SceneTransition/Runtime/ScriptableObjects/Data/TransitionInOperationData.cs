@@ -9,12 +9,14 @@ namespace SceneTransition.ScriptableObjects.Data
 	public class TransitionInOperationData : OperationData
 	{
 		public SceneTransitionBehaviour TransitionPrefab;
+		public float                    DelayTime;
 
-		public TransitionInOperationData(string nodeData, SceneTransitionBehaviour transitionPrefab) : base(OperationType.TransitionIn, nodeData)
+		public TransitionInOperationData(string nodeData, SceneTransitionBehaviour transitionPrefab, float delayTime) : base(OperationType.TransitionIn, nodeData)
 		{
 			TransitionPrefab = transitionPrefab;
+			DelayTime        = delayTime;
 		}
 
-		public override IOperation CreateOperation() => new TransitionInOperation(TransitionPrefab);
+		public override IOperation CreateOperation() => new TransitionInOperation(TransitionPrefab, DelayTime);
 	}
 }
