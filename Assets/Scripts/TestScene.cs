@@ -2,7 +2,7 @@ using SceneTransition;
 using SceneTransition.ScriptableObjects;
 using UnityEngine;
 
-public class Test : MonoBehaviour
+public class TestScene : MonoBehaviour
 {
 	[SerializeField] private SceneWorkflowAsset _workflow1Asset;
 	[SerializeField] private SceneWorkflowAsset _workflow2Asset;

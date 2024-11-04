@@ -105,8 +105,6 @@ namespace SceneTransition.Editor.Windows
 				}
 			}
 
-			_workflowAsset = null;
-
 			Close();
 
 			OpenWindow();

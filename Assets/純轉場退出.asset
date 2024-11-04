@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb25dde2dcf147b7962eb4a4e9ab5110, type: 3}
+  m_Name: "\u7D14\u8F49\u5834\u9000\u51FA"
+  m_EditorClassIdentifier: 
+  _operationData:
+  - rid: 5393378405984501789
+  references:
+    version: 2
+    RefIds:
+    - rid: 5393378405984501789
+      type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 4
+        NodeData: '{"Id":"d5066c07-5d09-44c9-b15d-57b1679d6f7f","Position":{"x":320.0,"y":159.20001220703126},"InputNodeId":"","OutputNodeId":""}'
