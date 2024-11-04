@@ -13,120 +13,119 @@ MonoBehaviour:
   m_Name: "\u6D41\u7A0B\u6E2C\u8A66"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 5393378338911027273
-  - rid: 5393378338911027274
-  - rid: 5393378338911027275
-  - rid: 5393378338911027276
-  - rid: 5393378338911027277
-  - rid: 5393378338911027278
-  - rid: 5393378338911027279
-  - rid: 5393378338911027280
-  - rid: 5393378338911027281
-  - rid: 5393378338911027282
-  - rid: 5393378338911027283
-  - rid: 5393378338911027284
-  - rid: 5393378338911027285
-  - rid: 5393378338911027286
+  - rid: 5393378405984501774
+  - rid: 5393378405984501775
+  - rid: 5393378405984501776
+  - rid: 5393378405984501777
+  - rid: 5393378405984501778
+  - rid: 5393378405984501779
+  - rid: 5393378405984501780
+  - rid: 5393378405984501781
+  - rid: 5393378405984501782
+  - rid: 5393378405984501783
+  - rid: 5393378405984501784
+  - rid: 5393378405984501785
+  - rid: 5393378405984501786
   references:
     version: 2
     RefIds:
-    - rid: 5393378338911027273
+    - rid: 5393378405984501774
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
-        NodeData: '{"Id":"d65c1271-c903-4521-88fa-a0eb2043e2bb","Position":{"x":-611.2000122070313,"y":-19.200000762939454},"InputNodeId":"","OutputNodeId":"5d7dce8a-c043-48cc-b85a-b9d2134471b0"}'
+        NodeData: '{"Id":"d65c1271-c903-4521-88fa-a0eb2043e2bb","Position":{"x":-608.7999877929688,"y":-71.19999694824219},"InputNodeId":"","OutputNodeId":"5d7dce8a-c043-48cc-b85a-b9d2134471b0"}'
         TransitionPrefab: {fileID: 4844962037871926762, guid: 948c51b465a23a647b378d5577eaf636, type: 3}
-    - rid: 5393378338911027274
+        DelayTime: 1
+    - rid: 5393378405984501775
       type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 1
-        NodeData: '{"Id":"5d7dce8a-c043-48cc-b85a-b9d2134471b0","Position":{"x":-161.60000610351563,"y":-19.200000762939454},"InputNodeId":"d65c1271-c903-4521-88fa-a0eb2043e2bb","OutputNodeId":"8b9b6426-808d-4ad0-a216-f3f53d475f8e"}'
-    - rid: 5393378338911027275
+        NodeData: '{"Id":"5d7dce8a-c043-48cc-b85a-b9d2134471b0","Position":{"x":-146.39999389648438,"y":-71.19999694824219},"InputNodeId":"d65c1271-c903-4521-88fa-a0eb2043e2bb","OutputNodeId":"8b9b6426-808d-4ad0-a216-f3f53d475f8e"}'
+    - rid: 5393378405984501776
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"8b9b6426-808d-4ad0-a216-f3f53d475f8e","Position":{"x":109.5999984741211,"y":-19.200000762939454},"InputNodeId":"5d7dce8a-c043-48cc-b85a-b9d2134471b0","OutputNodeId":"75c7c6af-fc53-4d89-a374-148076007597"}'
+        NodeData: '{"Id":"8b9b6426-808d-4ad0-a216-f3f53d475f8e","Position":{"x":97.5999984741211,"y":-71.19999694824219},"InputNodeId":"5d7dce8a-c043-48cc-b85a-b9d2134471b0","OutputNodeId":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0"}'
         SceneAsset:
           m_AssetGUID: e9665395f820adc469eb0d8e6ca43d68
           m_SubObjectName: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
-    - rid: 5393378338911027276
-      type: {class: DelayOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
-      data:
-        Type: 5
-        NodeData: '{"Id":"75c7c6af-fc53-4d89-a374-148076007597","Position":{"x":403.20001220703127,"y":-19.200000762939454},"InputNodeId":"8b9b6426-808d-4ad0-a216-f3f53d475f8e","OutputNodeId":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0"}'
         DelayTime: 1
-    - rid: 5393378338911027277
+    - rid: 5393378405984501777
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0","Position":{"x":-621.5999755859375,"y":211.20001220703126},"InputNodeId":"75c7c6af-fc53-4d89-a374-148076007597","OutputNodeId":"2c2a5580-d374-468b-95f5-ba662b07713f"}'
+        NodeData: '{"Id":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0","Position":{"x":416.0,"y":-71.19999694824219},"InputNodeId":"8b9b6426-808d-4ad0-a216-f3f53d475f8e","OutputNodeId":"2c2a5580-d374-468b-95f5-ba662b07713f"}'
         SceneAsset:
           m_AssetGUID: c111cd0e6bb406a4bbd0ffcd648f4198
           m_SubObjectName: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
-    - rid: 5393378338911027278
+        DelayTime: 0
+    - rid: 5393378405984501778
       type: {class: DelayOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 5
-        NodeData: '{"Id":"2c2a5580-d374-468b-95f5-ba662b07713f","Position":{"x":-346.3999938964844,"y":211.20001220703126},"InputNodeId":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0","OutputNodeId":"2ac0346a-9096-405a-aaa5-d36a97170c73"}'
+        NodeData: '{"Id":"2c2a5580-d374-468b-95f5-ba662b07713f","Position":{"x":-611.2000122070313,"y":188.0},"InputNodeId":"dcb51a14-f3ae-428e-91a1-4c2d943d4de0","OutputNodeId":"2ac0346a-9096-405a-aaa5-d36a97170c73"}'
         DelayTime: 1
-    - rid: 5393378338911027279
+    - rid: 5393378405984501779
       type: {class: UnloadLastSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 2
-        NodeData: '{"Id":"2ac0346a-9096-405a-aaa5-d36a97170c73","Position":{"x":-90.4000015258789,"y":211.20001220703126},"InputNodeId":"2c2a5580-d374-468b-95f5-ba662b07713f","OutputNodeId":"d654418a-7c71-428b-ac75-964875af27f0"}'
-    - rid: 5393378338911027280
+        NodeData: '{"Id":"2ac0346a-9096-405a-aaa5-d36a97170c73","Position":{"x":-346.3999938964844,"y":188.0},"InputNodeId":"2c2a5580-d374-468b-95f5-ba662b07713f","OutputNodeId":"d654418a-7c71-428b-ac75-964875af27f0"}'
+    - rid: 5393378405984501780
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"d654418a-7c71-428b-ac75-964875af27f0","Position":{"x":143.1999969482422,"y":211.20001220703126},"InputNodeId":"2ac0346a-9096-405a-aaa5-d36a97170c73","OutputNodeId":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc"}'
+        NodeData: '{"Id":"d654418a-7c71-428b-ac75-964875af27f0","Position":{"x":-12.0,"y":188.0},"InputNodeId":"2ac0346a-9096-405a-aaa5-d36a97170c73","OutputNodeId":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc"}'
         SceneAsset:
           m_AssetGUID: c111cd0e6bb406a4bbd0ffcd648f4198
           m_SubObjectName: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
-    - rid: 5393378338911027281
+        DelayTime: 0
+    - rid: 5393378405984501781
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc","Position":{"x":403.20001220703127,"y":211.20001220703126},"InputNodeId":"d654418a-7c71-428b-ac75-964875af27f0","OutputNodeId":"82bd286d-5602-417f-94d6-d20a523cd9de"}'
+        NodeData: '{"Id":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc","Position":{"x":403.20001220703127,"y":188.0},"InputNodeId":"d654418a-7c71-428b-ac75-964875af27f0","OutputNodeId":"82bd286d-5602-417f-94d6-d20a523cd9de"}'
         SceneAsset:
           m_AssetGUID: c111cd0e6bb406a4bbd0ffcd648f4198
           m_SubObjectName: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
-    - rid: 5393378338911027282
+        DelayTime: 0
+    - rid: 5393378405984501782
       type: {class: DelayOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 5
-        NodeData: '{"Id":"82bd286d-5602-417f-94d6-d20a523cd9de","Position":{"x":-621.5999755859375,"y":396.0},"InputNodeId":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc","OutputNodeId":"d1990460-bfa9-433f-98c9-f72ff14d24be"}'
+        NodeData: '{"Id":"82bd286d-5602-417f-94d6-d20a523cd9de","Position":{"x":-611.2000122070313,"y":449.6000061035156},"InputNodeId":"03ef30b6-3d67-48dc-ba4d-252e6a78d0dc","OutputNodeId":"d1990460-bfa9-433f-98c9-f72ff14d24be"}'
         DelayTime: 1
-    - rid: 5393378338911027283
+    - rid: 5393378405984501783
       type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 1
-        NodeData: '{"Id":"d1990460-bfa9-433f-98c9-f72ff14d24be","Position":{"x":-346.3999938964844,"y":396.0},"InputNodeId":"82bd286d-5602-417f-94d6-d20a523cd9de","OutputNodeId":"f1362297-8325-469c-9e91-f71d958ca0ca"}'
-    - rid: 5393378338911027284
+        NodeData: '{"Id":"d1990460-bfa9-433f-98c9-f72ff14d24be","Position":{"x":-346.3999938964844,"y":449.6000061035156},"InputNodeId":"82bd286d-5602-417f-94d6-d20a523cd9de","OutputNodeId":"f1362297-8325-469c-9e91-f71d958ca0ca"}'
+    - rid: 5393378405984501784
       type: {class: DelayOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 5
-        NodeData: '{"Id":"f1362297-8325-469c-9e91-f71d958ca0ca","Position":{"x":-122.4000015258789,"y":396.0},"InputNodeId":"d1990460-bfa9-433f-98c9-f72ff14d24be","OutputNodeId":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8"}'
+        NodeData: '{"Id":"f1362297-8325-469c-9e91-f71d958ca0ca","Position":{"x":-90.4000015258789,"y":449.6000061035156},"InputNodeId":"d1990460-bfa9-433f-98c9-f72ff14d24be","OutputNodeId":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8"}'
         DelayTime: 1
-    - rid: 5393378338911027285
+    - rid: 5393378405984501785
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8","Position":{"x":123.19999694824219,"y":396.0},"InputNodeId":"f1362297-8325-469c-9e91-f71d958ca0ca","OutputNodeId":"1fe83149-5105-40f2-bcf8-97f09b48f907"}'
+        NodeData: '{"Id":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8","Position":{"x":160.8000030517578,"y":452.0},"InputNodeId":"f1362297-8325-469c-9e91-f71d958ca0ca","OutputNodeId":"1fe83149-5105-40f2-bcf8-97f09b48f907"}'
         SceneAsset:
           m_AssetGUID: e9665395f820adc469eb0d8e6ca43d68
           m_SubObjectName: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
-    - rid: 5393378338911027286
+        DelayTime: 0
+    - rid: 5393378405984501786
       type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 4
-        NodeData: '{"Id":"1fe83149-5105-40f2-bcf8-97f09b48f907","Position":{"x":436.0,"y":396.0},"InputNodeId":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8","OutputNodeId":""}'
+        NodeData: '{"Id":"1fe83149-5105-40f2-bcf8-97f09b48f907","Position":{"x":432.0,"y":452.0},"InputNodeId":"d2d7ceba-eade-42e9-b7a4-11061fbbfde8","OutputNodeId":""}'

@@ -8,12 +8,14 @@ namespace SceneTransition.ScriptableObjects.Data
 	public class LoadSceneOperationData : OperationData
 	{
 		public AssetReference SceneAsset;
+		public float          DelayTime;
 
-		public LoadSceneOperationData(string nodeData, AssetReference sceneAsset) : base(OperationType.LoadScene, nodeData)
+		public LoadSceneOperationData(string nodeData, AssetReference sceneAsset, float delayTime) : base(OperationType.LoadScene, nodeData)
 		{
 			SceneAsset = sceneAsset;
+			DelayTime  = delayTime;
 		}
 
-		public override IOperation CreateOperation() => new LoadSceneOperation(SceneAsset);
+		public override IOperation CreateOperation() => new LoadSceneOperation(SceneAsset, DelayTime);
 	}
 }

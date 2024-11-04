@@ -75,11 +75,13 @@ namespace SceneTransition.Editor.Windows
 		{
 			var toolbar = new Toolbar();
 
+			var newButton     = new ToolbarButton(CreateNew) { text                   = "新建" };
 			var loadButton    = new ToolbarButton(() => Load()) { text                = "載入" };
 			var saveButton    = new ToolbarButton(Save) { text                        = "儲存" };
 			var saveAsButton  = new ToolbarButton(SaveAs) { text                      = "另存新檔" };
 			var showAllButton = new ToolbarButton(() => _graphView.FrameAll()) { text = "顯示全部" };
 
+			toolbar.Add(newButton);
 			toolbar.Add(loadButton);
 			toolbar.Add(saveButton);
 			toolbar.Add(saveAsButton);
@@ -90,6 +92,25 @@ namespace SceneTransition.Editor.Windows
 		}
 
 		#endregion
+
+		private void CreateNew()
+		{
+			if (hasUnsavedChanges)
+			{
+				if (!EditorUtility.DisplayDialog("警告",
+				                                 "目前有未儲存的更改，確定要建立新檔案嗎？",
+				                                 "確定", "取消"))
+				{
+					return;
+				}
+			}
+
+			_workflowAsset = null;
+
+			Close();
+
+			OpenWindow();
+		}
 
 		#region 儲存/載入
 

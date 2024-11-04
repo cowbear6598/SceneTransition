@@ -12,8 +12,10 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 	internal class LoadSceneNode : WorkflowNode
 	{
 		private AssetReference _sceneAsset;
+		private float          _delayTime;
 
 		private readonly ObjectField _objectField;
+		private readonly FloatField  _delayTimeField;
 
 		public LoadSceneNode(SceneWorkflowGraphView graphView) : base("讀取場景", graphView)
 		{
@@ -54,7 +56,30 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				ChangeSceneAsset(new AssetReference(guid));
 			});
 
+			_delayTimeField = new FloatField("等待時間")
+			{
+				style = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
+			};
+
+			_delayTimeField.RegisterValueChangedCallback(e =>
+			{
+				ChangeDelayTime(e.newValue);
+			});
+
 			mainContainer.Add(_objectField);
+			mainContainer.Add(_delayTimeField);
+		}
+
+		private void ChangeDelayTime(float delayTime)
+		{
+			var oldData = CreateOperationData();
+
+			_delayTime = Mathf.Clamp(delayTime, 0, float.MaxValue);
+
+			var newData = CreateOperationData();
+
+			var command = new ChangePropertyCommand(this, newData, oldData);
+			_graphView.ExecuteCommand(command);
 		}
 
 		private void ChangeSceneAsset(AssetReference sceneAsset)
@@ -70,15 +95,17 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		}
 
 		protected override OperationData ToOperationData(string nodeData)
-			=> new LoadSceneOperationData(nodeData, _sceneAsset);
+			=> new LoadSceneOperationData(nodeData, _sceneAsset, _delayTime);
 
 		internal override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as LoadSceneOperationData;
 
 			_sceneAsset = data.SceneAsset;
+			_delayTime  = data.DelayTime;
 
 			_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
+			_delayTimeField.SetValueWithoutNotify(_delayTime);
 		}
 
 		internal override bool IsValidateToSave()
