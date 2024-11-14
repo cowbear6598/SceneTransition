@@ -1,6 +1,6 @@
 {
   "name": "com.soap.scene-transition",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "場景轉換工具",
   "displayName": "SceneTransition",
   "unity": "2022.3",
