@@ -18,7 +18,7 @@ namespace SceneTransition.Operations
 
 			Object.Destroy(transition.gameObject);
 
-			SceneWorkflowEvent.RaiseTransitionOutComplete();
+			SceneTransitionEvent.RaiseTransitionOutComplete();
 		}
 	}
 }

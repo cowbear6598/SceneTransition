@@ -13,26 +13,22 @@ MonoBehaviour:
   m_Name: "\u4E0D\u81EA\u52D5\u8F49\u5834\u9000\u51FA"
   m_EditorClassIdentifier: 
   _operationData:
-  - rid: 5393378405984501787
-  - rid: 5393378405984501788
+  - rid: 5393378637944193059
+  - rid: 5393378637944193060
   references:
     version: 2
     RefIds:
-    - rid: 5393378405984501787
+    - rid: 5393378637944193059
       type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 3
         NodeData: '{"Id":"0e23d117-02c1-479b-bd5e-db02ed9e2b97","Position":{"x":457.6000061035156,"y":290.3999938964844},"InputNodeId":"","OutputNodeId":"f34b6d5f-5801-4261-b28b-ff66223a04f5"}'
         TransitionPrefab: {fileID: 4844962037871926762, guid: 948c51b465a23a647b378d5577eaf636, type: 3}
         DelayTime: 0
-    - rid: 5393378405984501788
+    - rid: 5393378637944193060
       type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
       data:
         Type: 0
-        NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":894.4000244140625,"y":290.3999938964844},"InputNodeId":"0e23d117-02c1-479b-bd5e-db02ed9e2b97","OutputNodeId":""}'
-        SceneAsset:
-          m_AssetGUID: 7a6ac76dd3010fa41a984ca972e5d2d7
-          m_SubObjectName: 
-          m_SubObjectType: 
-          m_EditorAssetChanged: 0
+        NodeData: '{"Id":"f34b6d5f-5801-4261-b28b-ff66223a04f5","Position":{"x":913.5999755859375,"y":290.3999938964844},"InputNodeId":"0e23d117-02c1-479b-bd5e-db02ed9e2b97","OutputNodeId":""}'
+        SceneName: Test3
         DelayTime: 0

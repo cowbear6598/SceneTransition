@@ -1,5 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
-using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 namespace SceneTransition.Operations
 {
@@ -7,13 +7,11 @@ namespace SceneTransition.Operations
 	{
 		public async UniTask Execute()
 		{
-			var sceneInstance = SceneRepository.Instance.GetLastLoadedScene();
+			var sceneName = SceneRepository.Instance.GetLastLoadedScene();
 
-			var sceneName = sceneInstance.Scene.name;
+			await SceneManager.UnloadSceneAsync(sceneName);
 
-			await Addressables.UnloadSceneAsync(sceneInstance).Task;
-
-			SceneWorkflowEvent.RaiseSceneUnloaded(sceneName);
+			SceneTransitionEvent.RaiseSceneUnloaded(sceneName);
 		}
 	}
 }

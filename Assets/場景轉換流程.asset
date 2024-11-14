@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb25dde2dcf147b7962eb4a4e9ab5110, type: 3}
+  m_Name: "\u5834\u666F\u8F49\u63DB\u6D41\u7A0B"
+  m_EditorClassIdentifier: 
+  _operationData:
+  - rid: 5393378637944193077
+  - rid: 5393378637944193078
+  - rid: 5393378637944193079
+  - rid: 5393378637944193080
+  references:
+    version: 2
+    RefIds:
+    - rid: 5393378637944193077
+      type: {class: TransitionInOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 3
+        NodeData: '{"Id":"9faedb04-0146-47a6-8b3d-6633d24fde2b","Position":{"x":11.199999809265137,"y":233.60000610351563},"InputNodeId":"","OutputNodeId":"3158b1e7-ee1d-43db-94f2-4ace1ba83918"}'
+        TransitionPrefab: {fileID: 4844962037871926762, guid: 948c51b465a23a647b378d5577eaf636, type: 3}
+        DelayTime: 0
+    - rid: 5393378637944193078
+      type: {class: UnloadAllScenesOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 1
+        NodeData: '{"Id":"3158b1e7-ee1d-43db-94f2-4ace1ba83918","Position":{"x":458.3999938964844,"y":259.20001220703127},"InputNodeId":"9faedb04-0146-47a6-8b3d-6633d24fde2b","OutputNodeId":"7ee4b76e-c2ea-428d-b025-e01f9b1c2d99"}'
+    - rid: 5393378637944193079
+      type: {class: LoadSceneOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 0
+        NodeData: '{"Id":"7ee4b76e-c2ea-428d-b025-e01f9b1c2d99","Position":{"x":672.7999877929688,"y":384.0},"InputNodeId":"3158b1e7-ee1d-43db-94f2-4ace1ba83918","OutputNodeId":"33f2c5f0-8020-4315-b516-4685d961945c"}'
+        SceneName: Test1
+        DelayTime: 0
+    - rid: 5393378637944193080
+      type: {class: TransitionOutOperationData, ns: SceneTransition.ScriptableObjects.Data, asm: SceneTransition}
+      data:
+        Type: 4
+        NodeData: '{"Id":"33f2c5f0-8020-4315-b516-4685d961945c","Position":{"x":885.5999755859375,"y":259.20001220703127},"InputNodeId":"7ee4b76e-c2ea-428d-b025-e01f9b1c2d99","OutputNodeId":""}'

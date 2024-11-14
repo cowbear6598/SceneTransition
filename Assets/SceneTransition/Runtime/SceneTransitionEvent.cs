@@ -2,7 +2,7 @@
 
 namespace SceneTransition
 {
-	public static class SceneWorkflowEvent
+	public static class SceneTransitionEvent
 	{
 		public static event Action<string> OnSceneLoaded;
 		public static event Action<string> OnSceneUnloaded;

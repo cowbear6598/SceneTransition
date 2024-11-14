@@ -1,59 +1,41 @@
-﻿using SceneTransition.Editor.GraphViews.History.Command;
+﻿using System.IO;
+using System.Linq;
+using SceneTransition.Editor.GraphViews.History.Command;
 using SceneTransition.ScriptableObjects.Data;
 using UnityEditor;
-using UnityEditor.AddressableAssets;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UIElements;
 
 namespace SceneTransition.Editor.GraphViews.Nodes
 {
 	internal class LoadSceneNode : WorkflowNode
 	{
-		private AssetReference _sceneAsset;
-		private float          _delayTime;
+		private string _sceneName;
+		private float  _delayTime;
 
-		private readonly ObjectField _objectField;
-		private readonly FloatField  _delayTimeField;
+		private readonly PopupField<string> _scenePopup;
+		private readonly FloatField         _delayTimeField;
 
 		public LoadSceneNode(SceneWorkflowGraphView graphView) : base("讀取場景", graphView)
 		{
-			_objectField = new ObjectField("場景資源")
+			var sceneNames = EditorBuildSettings.scenes
+			                                    .Select(s => Path.GetFileNameWithoutExtension(s.path))
+			                                    .ToList();
+
+			if (sceneNames.Count == 0)
 			{
-				objectType        = typeof(Object),
-				allowSceneObjects = false,
-				style             = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 },
+				Debug.LogError("沒有場景可以選擇讀取");
+				return;
+			}
+
+			_scenePopup = new PopupField<string>("場景名稱", sceneNames, 0)
+			{
+				style = { marginTop = 8, marginBottom = 8, marginLeft = 8, marginRight = 8 }
 			};
 
-			_objectField.RegisterValueChangedCallback(e =>
+			_scenePopup.RegisterValueChangedCallback(e =>
 			{
-				if (e.newValue == null)
-				{
-					ChangeSceneAsset(null);
-					return;
-				}
-
-				var assetPath = AssetDatabase.GetAssetPath(e.newValue);
-
-				if (!assetPath.EndsWith(".unity"))
-				{
-					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不是場景資源", "確定");
-					_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
-					return;
-				}
-
-				var guid             = AssetDatabase.AssetPathToGUID(assetPath);
-				var addressableAsset = AddressableAssetSettingsDefaultObject.Settings.FindAssetEntry(guid);
-
-				if (addressableAsset == null)
-				{
-					EditorUtility.DisplayDialog("錯誤", $"{e.newValue.name} 不在 Addressable 中", "確定");
-					_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
-					return;
-				}
-
-				ChangeSceneAsset(new AssetReference(guid));
+				ChangeSceneName(e.newValue);
 			});
 
 			_delayTimeField = new FloatField("等待時間")
@@ -66,7 +48,7 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 				ChangeDelayTime(e.newValue);
 			});
 
-			mainContainer.Add(_objectField);
+			mainContainer.Add(_scenePopup);
 			mainContainer.Add(_delayTimeField);
 		}
 
@@ -82,11 +64,11 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 			_graphView.ExecuteCommand(command);
 		}
 
-		private void ChangeSceneAsset(AssetReference sceneAsset)
+		private void ChangeSceneName(string sceneName)
 		{
 			var oldData = CreateOperationData();
 
-			_sceneAsset = sceneAsset;
+			_sceneName = sceneName;
 
 			var newData = CreateOperationData();
 			var command = new ChangePropertyCommand(this, newData, oldData);
@@ -95,26 +77,34 @@ namespace SceneTransition.Editor.GraphViews.Nodes
 		}
 
 		protected override OperationData ToOperationData(string nodeData)
-			=> new LoadSceneOperationData(nodeData, _sceneAsset, _delayTime);
+			=> new LoadSceneOperationData(nodeData, _sceneName, _delayTime);
 
 		internal override void LoadFromData(OperationData operationData)
 		{
 			var data = operationData as LoadSceneOperationData;
 
-			_sceneAsset = data.SceneAsset;
-			_delayTime  = data.DelayTime;
+			_sceneName = data.SceneName;
+			_delayTime = data.DelayTime;
 
-			_objectField.SetValueWithoutNotify(_sceneAsset?.editorAsset);
+			if (!_scenePopup.choices.Contains(_sceneName))
+			{
+				Debug.LogError($"場景名稱 {_sceneName} 不存在");
+				return;
+			}
+
+			_scenePopup.SetValueWithoutNotify(_sceneName);
 			_delayTimeField.SetValueWithoutNotify(_delayTime);
 		}
 
 		internal override bool IsValidateToSave()
 		{
-			if (_sceneAsset != null)
+			var sceneExists = EditorBuildSettings.scenes
+			                                     .Any(s => Path.GetFileNameWithoutExtension(s.path) == _sceneName);
+
+			if (sceneExists)
 				return true;
 
-			EditorUtility.DisplayDialog("錯誤", "場景資源未設定", "確定");
-
+			EditorUtility.DisplayDialog("錯誤", "選擇的場景不在 Build Settings 中", "確定");
 			return false;
 		}
 	}

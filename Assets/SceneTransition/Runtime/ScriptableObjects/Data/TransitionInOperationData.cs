@@ -1,7 +1,6 @@
 ﻿using System;
 using SceneTransition.Operations;
 using SceneTransition.Transition;
-using UnityEngine.AddressableAssets;
 
 namespace SceneTransition.ScriptableObjects.Data
 {

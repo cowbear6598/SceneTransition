@@ -1,30 +1,29 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 
 namespace SceneTransition.Operations
 {
 	internal class LoadSceneOperation : IOperation
 	{
-		private readonly AssetReference SceneAsset;
-		private readonly float          DelayTime;
+		private readonly string SceneName;
+		private readonly float  DelayTime;
 
-		public LoadSceneOperation(AssetReference sceneAsset, float delayTime)
+		public LoadSceneOperation(string sceneName, float delayTime)
 		{
-			SceneAsset = sceneAsset;
-			DelayTime  = delayTime;
+			SceneName = sceneName;
+			DelayTime = delayTime;
 		}
 
 		public async UniTask Execute()
 		{
-			var sceneInstance = await Addressables.LoadSceneAsync(SceneAsset, LoadSceneMode.Additive).Task;
+			await SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
 
 			await UniTask.Delay(TimeSpan.FromSeconds(DelayTime));
 
-			SceneRepository.Instance.AddLoadedScene(sceneInstance);
+			SceneRepository.Instance.AddLoadedScene(SceneName);
 
-			SceneWorkflowEvent.RaiseSceneLoaded(sceneInstance.Scene.name);
+			SceneTransitionEvent.RaiseSceneLoaded(SceneName);
 		}
 	}
 }

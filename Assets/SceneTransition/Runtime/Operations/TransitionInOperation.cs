@@ -24,7 +24,7 @@ namespace SceneTransition.Operations
 
 			await UniTask.Delay(TimeSpan.FromSeconds(DelayTime));
 
-			SceneWorkflowEvent.RaiseTransitionInComplete();
+			SceneTransitionEvent.RaiseTransitionInComplete();
 		}
 	}
 }

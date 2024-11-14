@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.SceneManagement;
 
 namespace SceneTransition
 {
@@ -7,14 +7,14 @@ namespace SceneTransition
 	{
 		public static SceneRepository Instance { get; } = new();
 
-		private readonly Stack<SceneInstance> loadedScene = new();
+		private readonly Stack<string> loadedScene = new();
 
-		public void AddLoadedScene(SceneInstance sceneInstance)
+		public void AddLoadedScene(string scene)
 		{
-			loadedScene.Push(sceneInstance);
+			loadedScene.Push(scene);
 		}
 
-		public SceneInstance GetLastLoadedScene() => loadedScene.Pop();
+		public string GetLastLoadedScene() => loadedScene.Pop();
 
 		public int LoadedSceneCount => loadedScene.Count;
 	}
